@@ -16,6 +16,7 @@ const PORT = Number(process.env.PORT || 8080);
 const SITE_URL = process.env.SITE_URL || `http://localhost:${PORT}`;
 const handlers = {
   '/api/checkout': require('./api/checkout'),
+  '/api/ticket-checkout': require('./api/ticket-checkout'),
   '/api/flutterwave-webhook': require('./api/flutterwave-webhook'),
   '/api/inquiry': require('./api/inquiry')
 };

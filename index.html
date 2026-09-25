@@ -4,19 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f2ec">
-  <meta name="description" content="The official Jonathan Roumie shop. Find signature merch, thoughtful care packages, meet-and-greet experiences and live Zoom courses.">
+  <meta name="description" content="Shop Jonathan Roumie merch, care packages and experiences, and find Sheen Awards ticket details for Peoria, Illinois.">
   <title>Jonathan Roumie — Official Shop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="tickets.css">
 </head>
 <body>
   <div class="announcement">A little something from Jonathan, just for you <span>✳</span></div>
   <header class="site-header">
     <a class="wordmark" href="#home" aria-label="Jonathan Roumie home">JONATHAN<span>ROUMIE</span><i>®</i></a>
     <nav class="main-nav" aria-label="Main navigation">
-      <a href="#shop">The shop</a><a href="#experiences">Experiences</a><a href="#about">About Jonathan</a>
+      <a href="#shop">The shop</a><a href="tickets.html">Tickets</a><a href="#experiences">Experiences</a><a href="#about">About Jonathan</a>
     </nav>
     <button class="bag-link cart-trigger" id="cart-trigger" type="button">Your cart <span id="cart-count">0</span> <b>↗</b></button>
   </header>
@@ -41,7 +42,10 @@
       </div>
     </section>
 
-    <section class="ticker" aria-label="Shop highlights"><div>MADE WITH YOU IN MIND <span>✳</span> A LITTLE JOY, DELIVERED <span>✳</span> THOUGHTFUL THINGS BY JONATHAN <span>✳</span> MADE WITH YOU IN MIND <span>✳</span> A LITTLE JOY, DELIVERED <span>✳</span></div></section>
+    <section class="sheen-promo" aria-labelledby="sheen-promo-title">
+      <a class="sheen-promo-image" href="tickets.html#ticket-types" aria-label="See Sheen Awards tickets"><img src="images/sheen-awards-ticket-details.png" alt="Sheen Awards ticket details showing General Admission and VIP Experience"></a>
+      <div class="sheen-promo-copy"><p class="eyebrow">TONIGHT IN ILLINOIS</p><h2 id="sheen-promo-title">The Sheen Awards<br><em>with Jonathan Roumie.</em></h2><p>Join Jonathan as host, presenter and Special Guest of Honor for an evening celebrating excellence.</p><div class="sheen-countdown-wrap"><span class="countdown-label">THE EVENING BEGINS IN</span><div class="event-countdown" data-event-countdown aria-label="Countdown to the Sheen Awards"><span><b data-days>00</b><small>DAYS</small></span><i>:</i><span><b data-hours>00</b><small>HRS</small></span><i>:</i><span><b data-minutes>00</b><small>MIN</small></span><i>:</i><span><b data-seconds>00</b><small>SEC</small></span></div><small class="countdown-note">Friday, September 25 · 5:00 p.m. Illinois time</small></div><a class="button button-dark" href="tickets.html#ticket-types">Explore tickets <span>↗</span></a></div>
+    </section>    <section class="ticker" aria-label="Shop highlights"><div>MADE WITH YOU IN MIND <span>✳</span> A LITTLE JOY, DELIVERED <span>✳</span> THOUGHTFUL THINGS BY JONATHAN <span>✳</span> MADE WITH YOU IN MIND <span>✳</span> A LITTLE JOY, DELIVERED <span>✳</span></div></section>
 
     <section class="section shop-section" id="shop">
       <div class="section-heading"><div><p class="eyebrow">THE JONATHAN ROUMIE EDIT</p><h2>Good things, <em>by category.</em></h2></div><a class="text-link" href="#products">View all pieces <span>↗</span></a></div>
@@ -86,5 +90,6 @@
   <dialog id="booking" class="booking-modal"><button class="modal-close" aria-label="Close">×</button><p class="eyebrow">LET'S MAKE A PLAN</p><h2 id="booking-title">Ask about availability</h2><p class="modal-description">Leave your details and Jonathan’s team can follow up with availability.</p><form id="booking-form"><label for="booking-name">YOUR NAME</label><input id="booking-name" name="name" autocomplete="name" placeholder="First and last name" required><label for="booking-email">EMAIL ADDRESS</label><input id="booking-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required><label for="booking-phone">PHONE NUMBER (OPTIONAL)</label><input id="booking-phone" name="phone" type="tel" autocomplete="tel" placeholder="Your phone number"><label for="booking-kind">I'M INTERESTED IN</label><select id="booking-kind" name="kind"><option value="meet_greet">Meet & greet</option><option value="zoom_course">Live Zoom course</option></select><label for="booking-message">ANYTHING ELSE? (OPTIONAL)</label><textarea id="booking-message" name="message" rows="3" placeholder="A date, question or note"></textarea><button class="button button-dark modal-submit" id="booking-submit" type="submit">Send availability request <span>↗</span></button></form><p class="modal-footnote">We’ll only use your details to respond to this request.</p><div class="form-success" id="booking-success"></div></dialog>
   <div class="toast" id="toast" role="status"></div>
   <script src="script.js"></script>
+  <script src="tickets.js"></script>
 </body>
 </html>

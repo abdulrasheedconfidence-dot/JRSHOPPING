@@ -1,0 +1,12 @@
+{
+  "name": "jonathan-roumie-shop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Jonathan Roumie shop with server-created Flutterwave checkout",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

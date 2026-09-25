@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2ec">
+  <meta name="description" content="The official Jonathan Roumie shop. Find signature merch, thoughtful care packages, meet-and-greet experiences and live Zoom courses.">
+  <title>Jonathan Roumie — Official Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="announcement">A little something from Jonathan, just for you <span>✳</span></div>
+  <header class="site-header">
+    <a class="wordmark" href="#home" aria-label="Jonathan Roumie home">JONATHAN<span>ROUMIE</span><i>®</i></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#shop">The shop</a><a href="#experiences">Experiences</a><a href="#about">About Jonathan</a>
+    </nav>
+    <button class="bag-link cart-trigger" id="cart-trigger" type="button">Your cart <span id="cart-count">0</span> <b>↗</b></button>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> THE OFFICIAL JONATHAN ROUMIE SHOP</p>
+        <h1>A little more<br>Jonathan in<br><em>your everyday.</em></h1>
+        <p class="hero-description">Good things to wear, keep close, learn from and remember. Made for the people who make it all worthwhile.</p>
+        <div class="hero-actions"><a class="button button-dark" href="#shop">Shop the collection <span>↗</span></a><a class="text-link" href="#experiences">Find your experience <span>↓</span></a></div>
+        <div class="hero-note"><span>✳</span> A personal note from Jonathan, in every order.</div>
+      </div>
+      <div class="hero-art hero-photo" aria-label="Jonathan Roumie portrait">
+        <img class="hero-photo-img" src="images/jonathan-portrait-art.jpg" alt="Portrait artwork of Jonathan Roumie">
+        <div class="art-sun"></div><div class="art-stamp">THE<br>GOOD<br>STUFF <span>JR</span></div>
+        <div class="art-shirt"><span>J</span><small>ROUMIE CLUB</small></div>
+        <div class="art-mug"><span>J.</span></div>
+        <div class="art-book"><span>MAKE<br>ROOM<br>FOR<br>GOOD.</span><small>JONATHAN ROUMIE</small></div>
+        <div class="art-caption">OBJECTS WITH A LITTLE<br>MORE MEANING <span>— JR</span></div>
+        <div class="art-index">01 / 04</div>
+      </div>
+    </section>
+
+    <section class="ticker" aria-label="Shop highlights"><div>MADE WITH YOU IN MIND <span>✳</span> A LITTLE JOY, DELIVERED <span>✳</span> THOUGHTFUL THINGS BY JONATHAN <span>✳</span> MADE WITH YOU IN MIND <span>✳</span> A LITTLE JOY, DELIVERED <span>✳</span></div></section>
+
+    <section class="section shop-section" id="shop">
+      <div class="section-heading"><div><p class="eyebrow">THE JONATHAN ROUMIE EDIT</p><h2>Good things, <em>by category.</em></h2></div><a class="text-link" href="#products">View all pieces <span>↗</span></a></div>
+      <div class="category-row" role="tablist" aria-label="Product categories">
+        <button class="category active" data-filter="all" role="tab" aria-selected="true">Everything <span>10</span></button><button class="category" data-filter="wear" role="tab" aria-selected="false">Wear it <span>03</span></button><button class="category" data-filter="home" role="tab" aria-selected="false">Keep it close <span>03</span></button><button class="category" data-filter="care" role="tab" aria-selected="false">Care packages <span>03</span></button><button class="category" data-filter="personalized" role="tab" aria-selected="false">Personalized gifts <span>01</span></button>
+      </div>
+      <div class="product-grid" id="products">
+        <article class="product-card" data-category="wear"><a class="product-art product-tee" href="#cart" data-product="The Roumie Club Tee" data-price="50"><img class="product-photo" src="images/roumie-shirt.jpg" alt="Jonathan Roumie design printed on a black T-shirt"><span class="product-badge">THE FAN FAVORITE</span><span class="art-plus">+</span></a><div class="product-info"><div><h3>The Roumie Club Tee</h3><p>Soft cotton. Big heart.</p></div><span class="price">$50</span></div></article>
+        <article class="product-card" data-category="home"><a class="product-art product-mug" href="#cart" data-product="The Good Days Mug" data-price="20"><img class="product-photo" src="images/roumie-mug.png" alt="Jonathan Roumie portrait mug"><span class="product-badge">A DAILY REMINDER</span><span class="art-plus">+</span></a><div class="product-info"><div><h3>The Good Days Mug</h3><p>Your morning, made warmer.</p></div><span class="price">$20</span></div></article>
+        <article class="product-card" data-category="wear"><a class="product-art product-cap" href="#cart" data-product="The Roumie Cap" data-price="25"><img class="product-photo" src="images/roumie-cap.jpg" alt="Jonathan Roumie portrait printed on a white cap"><span class="product-badge">OUT & ABOUT</span><span class="art-plus">+</span></a><div class="product-info"><div><h3>The Roumie Cap</h3><p>For wherever life takes you.</p></div><span class="price">$25</span></div></article>
+        <article class="product-card" data-category="care"><a class="product-art product-care" href="#cart" data-product="A Little Care Box" data-price="149"><img class="product-photo" src="images/gift-boxes.webp" alt="Gift boxes wrapped with ribbon"><span class="product-badge">GIFT A GOOD FEELING</span><span class="art-plus">+</span></a><div class="product-info"><div><h3>A Little Care Box</h3><p>Thoughtful comforts, picked by Jonathan.</p></div><span class="price">$149</span></div></article>
+        <article class="product-card" id="full-care-package" data-category="care"><a class="product-art full-package-art" href="#cart" data-product="The Jonathan Care Package" data-price="499"><span class="product-badge">THE FULL CARE PACKAGE</span><div class="package-artwork"><div class="package-ribbon"></div><span>THE<br>JONATHAN<br>CARE PACKAGE</span><b>JR</b></div><span class="art-plus">+</span></a><div class="product-info"><div><h3>The Jonathan Care Package</h3><p>A bigger bundle, thoughtfully packed.</p></div><span class="price">$499</span></div></article>
+        <article class="product-card" data-category="home"><a class="product-art product-frame" href="#cart" data-product="The Moments Print" data-price="99"><img class="product-photo" src="images/framed-portrait.webp" alt="Framed Jonathan Roumie portrait on a shelf"><span class="product-badge">FRAME A FEELING</span><span class="art-plus">+</span></a><div class="product-info"><div><h3>The Moments Print</h3><p>A little reminder for your wall.</p></div><span class="price">$99</span></div></article>
+        <article class="product-card" data-category="personalized"><a class="product-art product-frame custom-frame" href="#cart" data-product="Custom Photo Frame with Jonathan" data-price="499"><img class="product-photo" src="images/jonathan-portrait-art.jpg" alt="Jonathan portrait artwork for a personalized photo frame"><span class="product-badge">MADE PERSONAL FOR YOU</span><span class="art-plus">+</span></a><div class="product-info"><div><h3>Custom Photo Frame with Jonathan</h3><p>A personalized frame made just for you.</p></div><span class="price">$499</span></div></article>
+        <article class="product-card" data-category="home"><a class="product-art product-plate" href="#cart" data-product="The Sunday Plate" data-price="25"><img class="product-photo" src="images/scripture-plate.webp" alt="Scripture plate and serving set"><span class="product-badge">SET THE TABLE</span><span class="art-plus">+</span></a><div class="product-info"><div><h3>The Sunday Plate</h3><p>For meals worth lingering over.</p></div><span class="price">$25</span></div></article>
+        <article class="product-card" data-category="wear"><a class="product-art product-tote" href="#cart" data-product="The Good Things Tote" data-price="25"><img class="product-photo" src="images/jonathan-tote-portrait.jpg" alt="Jonathan portrait tote bag"><span class="product-badge">CARRY THE GOOD</span><span class="art-plus">+</span></a><div class="product-info"><div><h3>The Good Things Tote</h3><p>Your new everyday plus-one.</p></div><span class="price">$25</span></div></article>
+        <article class="product-card" data-category="care"><a class="product-art product-note" href="#cart" data-product="A Note From Jonathan" data-price="0" data-free-over="200"><span class="product-badge">FREE WITH $200+ ORDER</span><div class="note-shape"><span>Hey,<br><em>you.</em></span><small>A little note<br>from Jonathan.</small><i>J</i></div><span class="art-plus">+</span></a><div class="product-info"><div><h3>A Note From Jonathan</h3><p>A free add-on with orders over $200.</p></div><span class="price">FREE</span></div></article>
+      </div>
+      <p class="shop-footnote">Each piece is made to order or carefully packed just for you. <a href="#about">A little more about the shop ↗</a></p>
+    </section>
+
+    <section class="experience-section" id="experiences">
+      <div class="experience-top"><div><p class="eyebrow">MORE THAN A THING TO TAKE HOME</p><h2>Make a memory.<br><em>Learn something new.</em></h2></div><p class="experience-intro">The best part of this community is getting to spend time with you. Pick an experience and let's make it one to remember.</p></div>
+      <div class="experience-grid">
+        <article class="experience-card meet-card"><div class="experience-visual meet-visual"><span class="visual-kicker">A MOMENT JUST FOR US</span><span class="meet-scribble">LET'S<br>MEET!</span><span class="visual-star">✳</span><span class="visual-date">ONE ON ONE · IN PERSON</span></div><div class="experience-body"><div class="experience-label">THE PERSONAL ONE</div><h3>Meet & greet<br>with Jonathan</h3><p>A proper hello, a photo, a chat, and a little time together. Pick a date and make it yours.</p><div class="experience-bottom"><span>By availability</span><a href="#booking" class="round-arrow" data-booking="meet">↗</a></div></div></article>
+        <article class="experience-card zoom-card"><div class="experience-visual zoom-visual"><span class="visual-kicker">PULL UP A CHAIR</span><div class="zoom-window"><span class="zoom-dot"></span><span class="zoom-dot"></span><span class="zoom-dot"></span><div>GOOD IDEAS<br><em>start here.</em></div><small>LIVE WITH JONATHAN · ZOOM</small></div><span class="zoom-bloom">✳</span></div><div class="experience-body"><div class="experience-label">THE LEARNING ONE</div><h3>Live Zoom<br>sessions & courses</h3><p>Join Jonathan for a small-group course full of useful ideas, real conversation and room to grow.</p><div class="experience-bottom"><span>By availability</span><a href="#booking" class="round-arrow" data-booking="zoom">↗</a></div></div></article>
+        <article class="experience-card care-card"><div class="experience-visual care-visual"><span class="visual-kicker">SEND SOME LOVE</span><div class="gift-illustration"><div class="gift-lid">A LITTLE<br>CARE CLUB</div><div class="gift-body"><span>✳</span></div></div><span class="gift-caption">THOUGHTFULLY PACKED BY HAND</span></div><div class="experience-body"><div class="experience-label">THE GIFTING ONE</div><h3>Care packages<br>for your people</h3><p>Send someone a soft landing: a few hand-picked favorites and a note from Jonathan.</p><div class="experience-bottom"><span>$499 <small>/ package</small></span><a href="#full-care-package" class="round-arrow">↗</a></div></div></article>
+      </div>
+    </section>
+
+    <section class="quote-section" id="about"><span class="quote-mark">“</span><blockquote>I wanted this little corner of the internet to feel like getting a thoughtful package from a friend.</blockquote><div class="quote-credit"><span class="avatar">JR</span><span><b>With love, Jonathan.</b><small>THE PERSON BEHIND THE GOOD THINGS</small></span></div></section>
+
+    <section class="newsletter"><div class="newsletter-copy"><p class="eyebrow">A LETTER FROM JONATHAN</p><h2>A little good<br>in your inbox.</h2><p>New things, small reminders and first dibs. Never the boring stuff.</p></div><form class="newsletter-form" id="newsletter-form"><label for="email">YOUR EMAIL ADDRESS</label><div class="email-line"><input id="email" type="email" placeholder="you@example.com" required><button aria-label="Subscribe">↗</button></div><p id="newsletter-message">By joining, you agree to receive notes from Jonathan. Unsubscribe anytime.</p></form><span class="newsletter-spark">✳</span></section>
+  </main>
+
+  <dialog id="cart" class="cart-modal" aria-labelledby="cart-title"><button class="modal-close" id="cart-close" aria-label="Close cart">×</button><p class="eyebrow">YOUR PICKS</p><h2 id="cart-title">Your cart</h2><div id="cart-items" class="cart-items"></div><div class="cart-breakdown"><div><span>Items</span><strong id="cart-subtotal">$0.00</strong></div><div><span>Delivery</span><strong id="cart-shipping">$0.00</strong></div></div><div class="cart-total"><span>Order total</span><strong id="cart-total">$0.00</strong></div><button class="button button-dark cart-checkout" id="cart-checkout" type="button">Continue to delivery details <span>↗</span></button><p class="cart-error" id="cart-error"></p></dialog>
+
+  <dialog id="shipping-checkout" class="booking-modal shipping-modal"><button class="modal-close" id="shipping-close" aria-label="Close">×</button><p class="eyebrow">ALMOST YOURS</p><h2>Where should we send it?</h2><p class="modal-description">Enter your contact and delivery details, then continue to secure Flutterwave checkout.</p><form id="shipping-form"><div class="checkout-fields"><label>FULL NAME<input name="name" autocomplete="name" required></label><label>EMAIL ADDRESS<input name="email" type="email" autocomplete="email" required></label><label>PHONE NUMBER<input name="phone" type="tel" autocomplete="tel" required></label><label>COUNTRY<input name="country" autocomplete="country-name" value="Nigeria" required></label><label class="field-wide">STREET ADDRESS<input name="address" autocomplete="street-address" required></label><label> CITY<input name="city" autocomplete="address-level2" required></label><label>STATE<input name="state" autocomplete="address-level1" required></label><label>POSTAL CODE<input name="postalCode" autocomplete="postal-code"></label><label class="field-wide">DELIVERY NOTE (OPTIONAL)<textarea name="deliveryNote" rows="2" placeholder="Apartment, landmark or delivery instructions"></textarea></label></div><div class="shipping-total"><span>Order total</span><strong id="shipping-total">$0.00</strong></div><button class="button button-dark modal-submit" id="shipping-submit" type="submit">Continue to payment <span>↗</span></button><p class="checkout-status" id="checkout-status" role="status"></p></form><p class="modal-footnote">Your details are used to process and deliver this order. Payment is handled securely by Flutterwave.</p></dialog>
+
+  <footer class="site-footer"><a class="wordmark footer-wordmark" href="#home">JONATHAN<span>ROUMIE</span><i>®</i></a><p>A little more good, wherever you are.</p><div class="footer-right"><a href="#shop">Shop</a><a href="#experiences">Experiences</a><a href="mailto:hello@jonathanroumie.com">Get in touch</a><span>© 2025 Jonathan Roumie</span></div></footer>
+
+  <dialog id="booking" class="booking-modal"><button class="modal-close" aria-label="Close">×</button><p class="eyebrow">LET'S MAKE A PLAN</p><h2 id="booking-title">Ask about availability</h2><p class="modal-description">Leave your details and Jonathan’s team can follow up with availability.</p><form id="booking-form"><label for="booking-name">YOUR NAME</label><input id="booking-name" name="name" autocomplete="name" placeholder="First and last name" required><label for="booking-email">EMAIL ADDRESS</label><input id="booking-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required><label for="booking-phone">PHONE NUMBER (OPTIONAL)</label><input id="booking-phone" name="phone" type="tel" autocomplete="tel" placeholder="Your phone number"><label for="booking-kind">I'M INTERESTED IN</label><select id="booking-kind" name="kind"><option value="meet_greet">Meet & greet</option><option value="zoom_course">Live Zoom course</option></select><label for="booking-message">ANYTHING ELSE? (OPTIONAL)</label><textarea id="booking-message" name="message" rows="3" placeholder="A date, question or note"></textarea><button class="button button-dark modal-submit" id="booking-submit" type="submit">Send availability request <span>↗</span></button></form><p class="modal-footnote">We’ll only use your details to respond to this request.</p><div class="form-success" id="booking-success"></div></dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>

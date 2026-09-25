@@ -5,6 +5,7 @@ A responsive shop with product checkout, booking inquiries and Vercel/Supabase i
 ## What's included
 
 - A product catalog with cart, quantity editing, and an order total.
+- A persistent, high-contrast checkout bar with a live total and large tap target, including on mobile screens.
 - Shipping details collected before payment. Shipping is free.
 - Flutterwave Standard checkout created server-side with the exact server-calculated USD total.
 - Supabase storage for orders and booking inquiries. Direct browser access is blocked by Row Level Security.

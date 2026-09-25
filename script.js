@@ -61,6 +61,14 @@ function renderCart() {
   const list = document.getElementById('cart-items');
   list.innerHTML = items.length ? items.map(item => `<div class="cart-item"><div><strong>${item.name}</strong><small>${money(item.price)} each</small></div><div class="quantity-control"><button type="button" data-cart-action="minus" data-name="${item.name}" aria-label="Remove one ${item.name}">−</button><span>${item.quantity}</span><button type="button" data-cart-action="plus" data-name="${item.name}" aria-label="Add one ${item.name}" ${item.name === 'A Note From Jonathan' ? 'disabled' : ''}>+</button><button type="button" class="remove-item" data-cart-action="remove" data-name="${item.name}">Remove</button></div><b>${money(item.price * item.quantity)}</b></div>`).join('') : '<p class="empty-cart">Your cart is waiting for something good.</p>';
   document.getElementById('cart-checkout').disabled = !count;
+  const stickyCheckout = document.getElementById('sticky-checkout-button');
+  const stickyItems = document.getElementById('sticky-cart-items');
+  const stickyTotal = document.getElementById('sticky-cart-total');
+  if (stickyCheckout && stickyItems && stickyTotal) {
+    stickyCheckout.disabled = !count;
+    stickyItems.textContent = count ? `${count} ${count === 1 ? 'item' : 'items'} in your cart` : 'Your cart is empty';
+    stickyTotal.textContent = money(total + SHIPPING_FEE);
+  }
   document.getElementById('shipping-total').textContent = money(total + SHIPPING_FEE);
   document.getElementById('cart-error').textContent = '';
 }
@@ -76,11 +84,13 @@ document.getElementById('cart-items').addEventListener('click', event => {
   else item.quantity += 1;
   renderCart();
 });
-document.getElementById('cart-checkout').addEventListener('click', () => {
-  cartDialog.close();
+function openShippingCheckout() {
+  if (cartDialog.open) cartDialog.close();
   document.getElementById('checkout-status').textContent = '';
   document.getElementById('shipping-checkout').showModal();
-});
+}
+document.getElementById('cart-checkout').addEventListener('click', openShippingCheckout);
+document.getElementById('sticky-checkout-button').addEventListener('click', openShippingCheckout);
 document.getElementById('shipping-close').addEventListener('click', () => document.getElementById('shipping-checkout').close());
 document.getElementById('shipping-checkout').addEventListener('click', event => { if (event.target === event.currentTarget) event.currentTarget.close(); });
 document.getElementById('shipping-form').addEventListener('submit', async event => {

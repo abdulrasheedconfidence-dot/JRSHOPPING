@@ -10,7 +10,11 @@ const PRODUCTS = {
   'Custom Photo Frame with Jonathan': 499,
   'The Sunday Plate': 25,
   'The Good Things Tote': 25,
-  'A Note From Jonathan': 0
+  'A Note From Jonathan': 0,
+  'Hallow × Ghirelli Collaborative Rosary — Standard': 51,
+  'Hallow × Ghirelli Smart Rosary — NFC': 91,
+  'Commemorative Rosary — Silver Finish': 67,
+  'Commemorative Rosary — Gold Finish': 181
 };
 const CURRENCY = process.env.SHOP_CURRENCY || 'USD';
 const SHIPPING_FEE = Number(process.env.SHIPPING_FEE || 0);

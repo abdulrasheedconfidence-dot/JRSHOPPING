@@ -14,7 +14,10 @@ const PRODUCTS = {
   'Hallow × Ghirelli Collaborative Rosary — Standard': 51,
   'Hallow × Ghirelli Smart Rosary — NFC': 91,
   'Commemorative Rosary — Silver Finish': 67,
-  'Commemorative Rosary — Gold Finish': 181
+  'Commemorative Rosary — Gold Finish': 181,
+  'Baby Jesus Doll — Mini': 15,
+  'Baby Jesus Doll — Medium': 25,
+  'Baby Jesus Doll — Large': 110
 };
 const CURRENCY = process.env.SHOP_CURRENCY || 'USD';
 const SHIPPING_FEE = Number(process.env.SHIPPING_FEE || 0);

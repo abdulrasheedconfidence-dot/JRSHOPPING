@@ -17,9 +17,16 @@ categoryButtons.forEach(button => button.addEventListener('click', () => {
 
 const toast = document.getElementById('toast');
 let toastTimeout;
+document.querySelectorAll('[data-product-variant]').forEach(select => select.addEventListener('change', () => {
+  const price = Number(select.selectedOptions[0]?.dataset.price);
+  const display = select.closest('.product-card')?.querySelector('[data-variant-price]');
+  if (display && Number.isFinite(price)) display.textContent = money(price);
+}));
 document.querySelectorAll('[data-product]').forEach(link => link.addEventListener('click', event => {
   event.preventDefault();
-  const name = link.dataset.product;
+  const variant = link.closest('.product-card')?.querySelector('[data-product-variant]')?.selectedOptions[0];
+  const name = variant ? `${link.dataset.product} — ${variant.value}` : link.dataset.product;
+  const price = variant ? Number(variant.dataset.price) : Number(link.dataset.price);
   if (link.dataset.freeOver) {
     const subtotal = [...cart.values()].filter(item => item.name !== 'A Note From Jonathan').reduce((sum, item) => sum + item.price * item.quantity, 0);
     if (subtotal <= Number(link.dataset.freeOver)) {
@@ -37,7 +44,7 @@ document.querySelectorAll('[data-product]').forEach(link => link.addEventListene
       return;
     }
   }
-  const item = cart.get(name) || { name, price: Number(link.dataset.price), quantity: 0 };
+  const item = cart.get(name) || { name, price, quantity: 0 };
   item.quantity += 1;
   cart.set(name, item);
   renderCart();

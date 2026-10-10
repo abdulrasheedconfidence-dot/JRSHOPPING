@@ -22,11 +22,22 @@ document.querySelectorAll('[data-product-variant]').forEach(select => select.add
   const display = select.closest('.product-card')?.querySelector('[data-variant-price]');
   if (display && Number.isFinite(price)) display.textContent = money(price);
 }));
+document.querySelectorAll('[data-tee-color]').forEach(select => select.addEventListener('change', () => {
+  const option = select.selectedOptions[0];
+  const image = select.closest('.product-card')?.querySelector('.product-photo');
+  if (image && option?.dataset.image) {
+    image.src = option.dataset.image;
+    image.alt = `The Roumie Club T-shirt in ${option.value}`;
+  }
+}));
 document.querySelectorAll('[data-product]').forEach(link => link.addEventListener('click', event => {
   event.preventDefault();
-  const variant = link.closest('.product-card')?.querySelector('[data-product-variant]')?.selectedOptions[0];
-  const name = variant ? `${link.dataset.product} — ${variant.value}` : link.dataset.product;
-  const price = variant ? Number(variant.dataset.price) : Number(link.dataset.price);
+  const productCard = link.closest('.product-card');
+  const teeColor = link.dataset.productOptions === 'tee' ? productCard?.querySelector('[data-tee-color]')?.value : null;
+  const teeSize = link.dataset.productOptions === 'tee' ? productCard?.querySelector('[data-tee-size]')?.value : null;
+  const variant = productCard?.querySelector('[data-product-variant]')?.selectedOptions[0];
+  const name = teeColor ? `${link.dataset.product} — ${teeColor} — ${teeSize}` : variant ? `${link.dataset.product} — ${variant.value}` : link.dataset.product;
+  const price = teeColor ? Number(link.dataset.price) : variant ? Number(variant.dataset.price) : Number(link.dataset.price);
   if (link.dataset.freeOver) {
     const subtotal = [...cart.values()].filter(item => item.name !== 'A Note From Jonathan').reduce((sum, item) => sum + item.price * item.quantity, 0);
     if (subtotal <= Number(link.dataset.freeOver)) {

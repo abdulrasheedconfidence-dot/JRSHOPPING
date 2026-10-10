@@ -1,7 +1,21 @@
 const crypto = require('node:crypto');
 
 const PRODUCTS = {
-  'The Roumie Club Tee': 50,
+  'The Roumie Club Tee — White — S': 50,
+  'The Roumie Club Tee — White — M': 50,
+  'The Roumie Club Tee — White — L': 50,
+  'The Roumie Club Tee — White — XL': 50,
+  'The Roumie Club Tee — White — XXL': 50,
+  'The Roumie Club Tee — Green — S': 50,
+  'The Roumie Club Tee — Green — M': 50,
+  'The Roumie Club Tee — Green — L': 50,
+  'The Roumie Club Tee — Green — XL': 50,
+  'The Roumie Club Tee — Green — XXL': 50,
+  'The Roumie Club Tee — Black — S': 50,
+  'The Roumie Club Tee — Black — M': 50,
+  'The Roumie Club Tee — Black — L': 50,
+  'The Roumie Club Tee — Black — XL': 50,
+  'The Roumie Club Tee — Black — XXL': 50,
   'The Good Days Mug': 20,
   'The Roumie Cap': 25,
   'A Little Care Box': 149,

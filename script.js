@@ -22,6 +22,10 @@ if (donationChoice && fixedDonations[donationChoice]) {
     if (!cart.has(name)) cart.set(name, { name, price: customAmount, quantity: 1 });
   }
 }
+if (launchParams.get('vip') === '1') {
+  const name = 'Jonathan Roumie VIP Access Membership';
+  if (!cart.has(name)) cart.set(name, { name, price: 4000, quantity: 1 });
+}
 const money = amount => new Intl.NumberFormat('en-US', { style: 'currency', currency: SHOP_CURRENCY }).format(amount);
 
 const categoryButtons = document.querySelectorAll('.category');
@@ -109,17 +113,18 @@ function renderCart() {
   }
   document.getElementById('shipping-total').textContent = money(total + SHIPPING_FEE);
   document.getElementById('cart-error').textContent = '';
-  const donationOnly = items.length > 0 && items.every(item => item.name.startsWith('Halloween Donation — '));
+  const noShippingOnly = items.length > 0 && items.every(item => item.name.startsWith('Halloween Donation — ') || item.name === 'Jonathan Roumie VIP Access Membership');
+  const hasMembership = items.some(item => item.name === 'Jonathan Roumie VIP Access Membership');
   document.querySelectorAll('.delivery-field').forEach(label => {
-    label.hidden = donationOnly;
+    label.hidden = noShippingOnly;
     const input = label.querySelector('input, textarea');
     if (input) {
       if (!label.dataset.requiredState) label.dataset.requiredState = input.required ? 'required' : 'optional';
-      input.required = !donationOnly && label.dataset.requiredState === 'required';
+      input.required = !noShippingOnly && label.dataset.requiredState === 'required';
     }
   });
-  document.querySelector('.shipping-modal h2').textContent = donationOnly ? 'Your details for giving' : 'Where should we send it?';
-  document.querySelector('.shipping-modal .modal-description').textContent = donationOnly ? 'Enter your contact details to continue to secure checkout for your contribution.' : 'Enter your contact and delivery details, then continue to secure Flutterwave checkout.';
+  document.querySelector('.shipping-modal h2').textContent = noShippingOnly ? (hasMembership ? 'Your membership checkout' : 'Your details for giving') : 'Where should we send it?';
+  document.querySelector('.shipping-modal .modal-description').textContent = noShippingOnly ? 'Enter your contact details to continue to secure Flutterwave checkout.' : 'Enter your contact and delivery details, then continue to secure Flutterwave checkout.';
 }
 document.getElementById('cart-trigger').addEventListener('click', () => cartDialog.showModal());
 document.getElementById('cart-close').addEventListener('click', () => cartDialog.close());
@@ -162,7 +167,7 @@ document.getElementById('shipping-form').addEventListener('submit', async event 
   }
 });
 renderCart();
-if (launchParams.has('donation')) requestAnimationFrame(() => cartDialog.showModal());
+if (launchParams.has('donation') || launchParams.get('vip') === '1') requestAnimationFrame(() => cartDialog.showModal());
 
 const modal = document.getElementById('booking');
 const bookingKind = document.getElementById('booking-kind');

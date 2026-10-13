@@ -32,6 +32,7 @@ const PRODUCTS = {
   'Baby Jesus Doll — Mini': 15,
   'Baby Jesus Doll — Medium': 25,
   'Baby Jesus Doll — Large': 110,
+  'Jonathan Roumie VIP Access Membership': 4000,
   'Halloween Donation — $100': 100,
   'Halloween Donation — $150': 150,
   'Halloween Donation — $1000': 1000,
@@ -43,6 +44,7 @@ const PRODUCTS = {
 };
 const DONATIONS = new Set(['Halloween Donation — $100', 'Halloween Donation — $150', 'Halloween Donation — $1000']);
 const isDonationName = name => DONATIONS.has(name) || (typeof name === 'string' && /^Halloween Donation — Custom — \$\d+$/.test(name));
+const isNoShippingName = name => isDonationName(name) || name === 'Jonathan Roumie VIP Access Membership';
 const CURRENCY = process.env.SHOP_CURRENCY || 'USD';
 const SHIPPING_FEE = Number(process.env.SHIPPING_FEE || 0);
 
@@ -73,7 +75,7 @@ module.exports = async function checkout(req, res) {
   if (!process.env.FLW_SECRET_KEY) return reply(res, 503, { error: 'Secure checkout is not configured yet. Please contact the shop.' });
 
   const customer = req.body?.customer || {};
-  const hasPhysicalItems = Array.isArray(req.body.items) && req.body.items.some(line => !isDonationName(line.name));
+  const hasPhysicalItems = Array.isArray(req.body.items) && req.body.items.some(line => !isNoShippingName(line.name));
   const required = ['name', 'email', 'phone', ...(hasPhysicalItems ? ['country', 'address', 'city', 'state'] : [])];
   if (required.some(field => typeof customer[field] !== 'string' || !customer[field].trim())) {
     return reply(res, 400, { error: 'Please fill in the required contact and delivery details.' });
@@ -101,6 +103,9 @@ module.exports = async function checkout(req, res) {
   }
   const amount = itemsTotal + SHIPPING_FEE;
   if (!Number.isFinite(amount) || amount <= 0) return reply(res, 400, { error: 'The order total is not valid.' });
+  const hasDonation = lines.some(line => isDonationName(line.name));
+  const hasMembership = lines.some(line => line.name === 'Jonathan Roumie VIP Access Membership');
+  const paymentDescription = hasDonation && hasMembership ? 'Community contribution and VIP membership' : hasDonation ? 'Halloween community contribution' : hasMembership ? 'VIP Access Membership · one-time payment' : 'Shop order';
 
   const txRef = `roumie-${crypto.randomUUID()}`;
   const order = {
@@ -148,7 +153,7 @@ module.exports = async function checkout(req, res) {
         redirect_url: `${siteUrl}/?payment=return`,
         customer: { email: customer.email.trim(), name: customer.name.trim(), phonenumber: customer.phone.trim() },
         meta: { order_id: storedOrder.id },
-        customizations: { title: 'Jonathan Roumie Shop', description: hasPhysicalItems ? 'Shop order' : 'Halloween community contribution' }
+        customizations: { title: 'Jonathan Roumie Shop', description: paymentDescription }
       })
     });
   } catch {

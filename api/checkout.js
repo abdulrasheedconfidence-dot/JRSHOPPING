@@ -31,8 +31,17 @@ const PRODUCTS = {
   'Commemorative Rosary — Gold Finish': 181,
   'Baby Jesus Doll — Mini': 15,
   'Baby Jesus Doll — Medium': 25,
-  'Baby Jesus Doll — Large': 110
+  'Baby Jesus Doll — Large': 110,
+  'Halloween Donation — $100': 100,
+  'Halloween Donation — $150': 150,
+  'Halloween Donation — $1000': 1000,
+  ...['S', 'M', 'L', 'XL', 'XXL'].flatMap(size => [
+    [`Come & See World Tour Hoodie — ${size}`, 50],
+    ["Don't Let Me Go Long Sleeve — " + size, 35],
+    ["Don't Let Me Go Tee — " + size, 20]
+  ]).reduce((products, [name, price]) => ({ ...products, [name]: price }), {})
 };
+const DONATIONS = new Set(['Halloween Donation — $100', 'Halloween Donation — $150', 'Halloween Donation — $1000', 'Halloween Donation — Custom']);
 const CURRENCY = process.env.SHOP_CURRENCY || 'USD';
 const SHIPPING_FEE = Number(process.env.SHIPPING_FEE || 0);
 
@@ -63,18 +72,20 @@ module.exports = async function checkout(req, res) {
   if (!process.env.FLW_SECRET_KEY) return reply(res, 503, { error: 'Secure checkout is not configured yet. Please contact the shop.' });
 
   const customer = req.body?.customer || {};
-  const required = ['name', 'email', 'phone', 'country', 'address', 'city', 'state'];
+  const hasPhysicalItems = Array.isArray(req.body.items) && req.body.items.some(line => !DONATIONS.has(line.name));
+  const required = ['name', 'email', 'phone', ...(hasPhysicalItems ? ['country', 'address', 'city', 'state'] : [])];
   if (required.some(field => typeof customer[field] !== 'string' || !customer[field].trim())) {
-    return reply(res, 400, { error: 'Please fill in your name, email, phone and full delivery address.' });
+    return reply(res, 400, { error: 'Please fill in the required contact and delivery details.' });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email)) return reply(res, 400, { error: 'Please enter a valid email address.' });
   if (!Array.isArray(req.body.items) || !req.body.items.length || req.body.items.length > 30) return reply(res, 400, { error: 'Your cart is empty or has too many line items.' });
 
   const lines = [];
   for (const line of req.body.items) {
-    const unitPrice = PRODUCTS[line.name];
+    const unitPrice = line.name === 'Halloween Donation — Custom' ? Number(line.customAmount) : PRODUCTS[line.name];
     const quantity = Number(line.quantity);
-    if (unitPrice === undefined || !Number.isInteger(quantity) || quantity < 1 || quantity > 50) {
+    const validCustomDonation = line.name !== 'Halloween Donation — Custom' || (Number.isInteger(unitPrice) && unitPrice >= 1 && unitPrice <= 100000);
+    if (unitPrice === undefined || !Number.isFinite(unitPrice) || unitPrice < 0 || !validCustomDonation || !Number.isInteger(quantity) || quantity < 1 || quantity > 50) {
       return reply(res, 400, { error: 'A product or quantity in your cart is not valid.' });
     }
     lines.push({ name: line.name, quantity, unit_price: unitPrice, line_total: unitPrice * quantity });
@@ -99,14 +110,14 @@ module.exports = async function checkout(req, res) {
     customer_name: customer.name.trim(),
     customer_email: customer.email.trim(),
     customer_phone: customer.phone.trim(),
-    shipping_address: {
+    shipping_address: hasPhysicalItems ? {
       country: customer.country.trim(),
       address: customer.address.trim(),
       city: customer.city.trim(),
       state: customer.state.trim(),
       postal_code: String(customer.postalCode || '').trim(),
       delivery_note: String(customer.deliveryNote || '').trim()
-    }
+    } : null
   };
 
   let storedOrder;
@@ -135,7 +146,7 @@ module.exports = async function checkout(req, res) {
         redirect_url: `${siteUrl}/?payment=return`,
         customer: { email: customer.email.trim(), name: customer.name.trim(), phonenumber: customer.phone.trim() },
         meta: { order_id: storedOrder.id },
-        customizations: { title: 'Jonathan Roumie Shop', description: 'Merchandise order' }
+        customizations: { title: 'Jonathan Roumie Shop', description: hasPhysicalItems ? 'Shop order' : 'Halloween community contribution' }
       })
     });
   } catch {

@@ -6,3 +6,5 @@
 
 /* Awards feature: full half-panel photo, no fade */
 .sheen-promo{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}.sheen-promo-image{width:100%;max-width:none;max-height:none;aspect-ratio:4/3;justify-self:stretch;box-shadow:none;background:transparent;mask-image:none;-webkit-mask-image:none}.sheen-promo-image img{max-height:none;object-fit:cover;object-position:center 38%}.award-photo-placeholder{mask-image:none;-webkit-mask-image:none}.ticket-poster.award-photo-placeholder{mask-image:none;-webkit-mask-image:none}@media(max-width:600px){.sheen-promo{grid-template-columns:1fr;gap:23px}.sheen-promo-image{width:100%;max-height:none;aspect-ratio:4/3}}
+
+@media(max-width:600px){.tickets-page .site-header .main-nav{display:flex;order:3;width:100%;justify-content:space-between;gap:7px;font-size:9px}}

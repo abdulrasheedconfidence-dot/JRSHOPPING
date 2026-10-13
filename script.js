@@ -3,6 +3,19 @@ const CHECKOUT_ENDPOINT = "/api/checkout";
 const SHOP_CURRENCY = "USD";
 const SHIPPING_FEE = 0; // Shipping is free.
 const cart = new Map();
+const launchParams = new URLSearchParams(location.search);
+const donationChoice = launchParams.get('donation');
+const fixedDonations = { '100': 100, '150': 150, '1000': 1000 };
+if (donationChoice && fixedDonations[donationChoice]) {
+  const name = `Halloween Donation — $${fixedDonations[donationChoice]}`;
+  cart.set(name, { name, price: fixedDonations[donationChoice], quantity: 1 });
+} else if (donationChoice === 'custom') {
+  const customAmount = Number(launchParams.get('amount'));
+  if (Number.isFinite(customAmount) && customAmount >= 1 && customAmount <= 100000) {
+    const name = 'Halloween Donation — Custom';
+    cart.set(name, { name, price: customAmount, quantity: 1, customAmount });
+  }
+}
 const money = amount => new Intl.NumberFormat('en-US', { style: 'currency', currency: SHOP_CURRENCY }).format(amount);
 
 const categoryButtons = document.querySelectorAll('.category');
@@ -34,9 +47,9 @@ document.querySelectorAll('[data-product]').forEach(link => link.addEventListene
   event.preventDefault();
   const productCard = link.closest('.product-card');
   const teeColor = link.dataset.productOptions === 'tee' ? productCard?.querySelector('[data-tee-color]')?.value : null;
-  const teeSize = link.dataset.productOptions === 'tee' ? productCard?.querySelector('[data-tee-size]')?.value : null;
+  const teeSize = link.dataset.productOptions === 'tee' ? productCard?.querySelector('[data-tee-size]')?.value : link.dataset.productOptions === 'sized' ? productCard?.querySelector('[data-apparel-size]')?.value : null;
   const variant = productCard?.querySelector('[data-product-variant]')?.selectedOptions[0];
-  const name = teeColor ? `${link.dataset.product} — ${teeColor} — ${teeSize}` : variant ? `${link.dataset.product} — ${variant.value}` : link.dataset.product;
+  const name = teeColor ? `${link.dataset.product} — ${teeColor} — ${teeSize}` : teeSize ? `${link.dataset.product} — ${teeSize}` : variant ? `${link.dataset.product} — ${variant.value}` : link.dataset.product;
   const price = teeColor ? Number(link.dataset.price) : variant ? Number(variant.dataset.price) : Number(link.dataset.price);
   if (link.dataset.freeOver) {
     const subtotal = [...cart.values()].filter(item => item.name !== 'A Note From Jonathan').reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -89,6 +102,17 @@ function renderCart() {
   }
   document.getElementById('shipping-total').textContent = money(total + SHIPPING_FEE);
   document.getElementById('cart-error').textContent = '';
+  const donationOnly = items.length > 0 && items.every(item => item.name.startsWith('Halloween Donation — '));
+  document.querySelectorAll('.delivery-field').forEach(label => {
+    label.hidden = donationOnly;
+    const input = label.querySelector('input, textarea');
+    if (input) {
+      if (!label.dataset.requiredState) label.dataset.requiredState = input.required ? 'required' : 'optional';
+      input.required = !donationOnly && label.dataset.requiredState === 'required';
+    }
+  });
+  document.querySelector('.shipping-modal h2').textContent = donationOnly ? 'Your details for giving' : 'Where should we send it?';
+  document.querySelector('.shipping-modal .modal-description').textContent = donationOnly ? 'Enter your contact details to continue to secure checkout for your contribution.' : 'Enter your contact and delivery details, then continue to secure Flutterwave checkout.';
 }
 document.getElementById('cart-trigger').addEventListener('click', () => cartDialog.showModal());
 document.getElementById('cart-close').addEventListener('click', () => cartDialog.close());
@@ -119,7 +143,7 @@ document.getElementById('shipping-form').addEventListener('submit', async event 
   submit.disabled = true;
   status.textContent = 'Preparing your secure payment...';
   const customer = Object.fromEntries(new FormData(form).entries());
-  const payload = { customer, items: [...cart.values()].map(({ name, quantity }) => ({ name, quantity })) };
+  const payload = { customer, items: [...cart.values()].map(({ name, quantity, customAmount }) => ({ name, quantity, ...(customAmount ? { customAmount } : {}) })) };
   try {
     const response = await fetch(CHECKOUT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     const result = await response.json();
@@ -131,6 +155,7 @@ document.getElementById('shipping-form').addEventListener('submit', async event 
   }
 });
 renderCart();
+if (launchParams.has('donation')) requestAnimationFrame(() => cartDialog.showModal());
 
 const modal = document.getElementById('booking');
 const bookingKind = document.getElementById('booking-kind');

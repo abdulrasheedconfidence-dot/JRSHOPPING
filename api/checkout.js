@@ -41,7 +41,8 @@ const PRODUCTS = {
     ["Don't Let Me Go Tee — " + size, 20]
   ]).reduce((products, [name, price]) => ({ ...products, [name]: price }), {})
 };
-const DONATIONS = new Set(['Halloween Donation — $100', 'Halloween Donation — $150', 'Halloween Donation — $1000', 'Halloween Donation — Custom']);
+const DONATIONS = new Set(['Halloween Donation — $100', 'Halloween Donation — $150', 'Halloween Donation — $1000']);
+const isDonationName = name => DONATIONS.has(name) || (typeof name === 'string' && /^Halloween Donation — Custom — \$\d+$/.test(name));
 const CURRENCY = process.env.SHOP_CURRENCY || 'USD';
 const SHIPPING_FEE = Number(process.env.SHIPPING_FEE || 0);
 
@@ -72,7 +73,7 @@ module.exports = async function checkout(req, res) {
   if (!process.env.FLW_SECRET_KEY) return reply(res, 503, { error: 'Secure checkout is not configured yet. Please contact the shop.' });
 
   const customer = req.body?.customer || {};
-  const hasPhysicalItems = Array.isArray(req.body.items) && req.body.items.some(line => !DONATIONS.has(line.name));
+  const hasPhysicalItems = Array.isArray(req.body.items) && req.body.items.some(line => !isDonationName(line.name));
   const required = ['name', 'email', 'phone', ...(hasPhysicalItems ? ['country', 'address', 'city', 'state'] : [])];
   if (required.some(field => typeof customer[field] !== 'string' || !customer[field].trim())) {
     return reply(res, 400, { error: 'Please fill in the required contact and delivery details.' });
@@ -82,9 +83,10 @@ module.exports = async function checkout(req, res) {
 
   const lines = [];
   for (const line of req.body.items) {
-    const unitPrice = line.name === 'Halloween Donation — Custom' ? Number(line.customAmount) : PRODUCTS[line.name];
+    const customDonationMatch = typeof line.name === 'string' && line.name.match(/^Halloween Donation — Custom — \$(\d+)$/);
+    const unitPrice = customDonationMatch ? Number(customDonationMatch[1]) : PRODUCTS[line.name];
     const quantity = Number(line.quantity);
-    const validCustomDonation = line.name !== 'Halloween Donation — Custom' || (Number.isInteger(unitPrice) && unitPrice >= 1 && unitPrice <= 100000);
+    const validCustomDonation = !customDonationMatch || (Number.isInteger(unitPrice) && unitPrice >= 1 && unitPrice <= 100000);
     if (unitPrice === undefined || !Number.isFinite(unitPrice) || unitPrice < 0 || !validCustomDonation || !Number.isInteger(quantity) || quantity < 1 || quantity > 50) {
       return reply(res, 400, { error: 'A product or quantity in your cart is not valid.' });
     }

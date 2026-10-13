@@ -2,18 +2,24 @@
 const CHECKOUT_ENDPOINT = "/api/checkout";
 const SHOP_CURRENCY = "USD";
 const SHIPPING_FEE = 0; // Shipping is free.
-const cart = new Map();
+const CART_STORAGE_KEY = 'roumie-shop-cart';
+let savedCart = [];
+try {
+  const parsedCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
+  if (Array.isArray(parsedCart)) savedCart = parsedCart.filter(item => item && typeof item.name === 'string' && Number.isFinite(Number(item.price)) && Number.isInteger(Number(item.quantity)) && Number(item.quantity) > 0);
+} catch { /* Start with an empty cart if browser storage is unavailable or invalid. */ }
+const cart = new Map(savedCart.map(item => [item.name, { ...item, price: Number(item.price), quantity: Number(item.quantity) }]));
 const launchParams = new URLSearchParams(location.search);
 const donationChoice = launchParams.get('donation');
 const fixedDonations = { '100': 100, '150': 150, '1000': 1000 };
 if (donationChoice && fixedDonations[donationChoice]) {
   const name = `Halloween Donation — $${fixedDonations[donationChoice]}`;
-  cart.set(name, { name, price: fixedDonations[donationChoice], quantity: 1 });
+  if (!cart.has(name)) cart.set(name, { name, price: fixedDonations[donationChoice], quantity: 1 });
 } else if (donationChoice === 'custom') {
   const customAmount = Number(launchParams.get('amount'));
-  if (Number.isFinite(customAmount) && customAmount >= 1 && customAmount <= 100000) {
-    const name = 'Halloween Donation — Custom';
-    cart.set(name, { name, price: customAmount, quantity: 1, customAmount });
+  if (Number.isInteger(customAmount) && customAmount >= 1 && customAmount <= 100000) {
+    const name = `Halloween Donation — Custom — $${customAmount}`;
+    if (!cart.has(name)) cart.set(name, { name, price: customAmount, quantity: 1 });
   }
 }
 const money = amount => new Intl.NumberFormat('en-US', { style: 'currency', currency: SHOP_CURRENCY }).format(amount);
@@ -83,6 +89,7 @@ function renderCart() {
   const qualifyingSubtotal = [...cart.values()].filter(item => item.name !== 'A Note From Jonathan').reduce((sum, item) => sum + item.price * item.quantity, 0);
   if (qualifyingSubtotal <= 200) cart.delete('A Note From Jonathan');
   const items = [...cart.values()];
+  try { localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items)); } catch { /* Cart remains usable for this page view. */ }
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   document.getElementById('cart-count').textContent = count;
@@ -143,7 +150,7 @@ document.getElementById('shipping-form').addEventListener('submit', async event 
   submit.disabled = true;
   status.textContent = 'Preparing your secure payment...';
   const customer = Object.fromEntries(new FormData(form).entries());
-  const payload = { customer, items: [...cart.values()].map(({ name, quantity, customAmount }) => ({ name, quantity, ...(customAmount ? { customAmount } : {}) })) };
+  const payload = { customer, items: [...cart.values()].map(({ name, quantity }) => ({ name, quantity })) };
   try {
     const response = await fetch(CHECKOUT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     const result = await response.json();

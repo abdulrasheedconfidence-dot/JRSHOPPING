@@ -32,7 +32,6 @@ const PRODUCTS = {
   'Baby Jesus Doll — Mini': 15,
   'Baby Jesus Doll — Medium': 25,
   'Baby Jesus Doll — Large': 110,
-  'Jonathan Roumie VIP Access Membership': 4000,
   'Halloween Donation — $100': 100,
   'Halloween Donation — $150': 150,
   'Halloween Donation — $1000': 1000,
@@ -44,7 +43,7 @@ const PRODUCTS = {
 };
 const DONATIONS = new Set(['Halloween Donation — $100', 'Halloween Donation — $150', 'Halloween Donation — $1000']);
 const isDonationName = name => DONATIONS.has(name) || (typeof name === 'string' && /^Halloween Donation — Custom — \$\d+$/.test(name));
-const isNoShippingName = name => isDonationName(name) || name === 'Jonathan Roumie VIP Access Membership';
+const isNoShippingName = name => isDonationName(name);
 const CURRENCY = process.env.SHOP_CURRENCY || 'USD';
 const SHIPPING_FEE = Number(process.env.SHIPPING_FEE || 0);
 
@@ -104,8 +103,7 @@ module.exports = async function checkout(req, res) {
   const amount = itemsTotal + SHIPPING_FEE;
   if (!Number.isFinite(amount) || amount <= 0) return reply(res, 400, { error: 'The order total is not valid.' });
   const hasDonation = lines.some(line => isDonationName(line.name));
-  const hasMembership = lines.some(line => line.name === 'Jonathan Roumie VIP Access Membership');
-  const paymentDescription = hasDonation && hasMembership ? 'Community contribution and VIP membership' : hasDonation ? 'Halloween community contribution' : hasMembership ? 'VIP Access Membership · one-time payment' : 'Shop order';
+  const paymentDescription = hasDonation ? 'Halloween community contribution' : 'Shop order';
 
   const txRef = `roumie-${crypto.randomUUID()}`;
   const order = {

@@ -90,26 +90,24 @@ async function sendOrderEmails(order) {
   const safeName = escapeHtml(order.customer_name);
   const safeRef = escapeHtml(order.tx_ref);
   const lines = Array.isArray(order.items) ? order.items : [];
-  const membershipIncluded = lines.some(item => item.name === 'Jonathan Roumie VIP Access Membership');
-  const noShippingOnly = lines.length > 0 && lines.every(item => String(item.name).startsWith('Halloween Donation — ') || item.name === 'Jonathan Roumie VIP Access Membership');
-  const donationOnly = noShippingOnly && !membershipIncluded;
+  const donationOnly = lines.length > 0 && lines.every(item => String(item.name).startsWith('Halloween Donation — '));
   const itemRows = lines.map(item => `<tr><td style="padding:10px;border-bottom:1px solid #eee">${escapeHtml(item.name)} × ${Number(item.quantity)}</td><td style="padding:10px;border-bottom:1px solid #eee;text-align:right">${money(item.line_total)}</td></tr>`).join('');
   const itemText = lines.map(item => `${item.name} × ${Number(item.quantity)} — ${money(item.line_total)}`).join('\n');
   const total = money(order.amount);
   const address = order.shipping_address || {};
   const addressText = [address.address, address.city, address.state, address.postal_code, address.country].filter(Boolean).join(', ');
   const safeAddress = escapeHtml(addressText);
-  const receiptMessage = membershipIncluded ? 'Your one-time VIP Access Membership payment has been received.' : donationOnly ? 'Your contribution has been received. Thank you for helping make a Halloween gathering possible.' : 'Your payment is confirmed. We’re getting your order ready.';
-  const shippingMessage = noShippingOnly ? '' : `<p><strong>Shipping to</strong><br>${safeAddress || 'Address provided at checkout'}</p><p>We’ll follow up with delivery updates when they’re available.</p>`;
-  const shippingText = noShippingOnly ? '' : `\nShipping to: ${addressText || 'Address provided at checkout'}\n\nWe’ll follow up with delivery updates when they’re available.`;
+  const receiptMessage = donationOnly ? 'Your contribution has been received. Thank you for helping make a Halloween gathering possible.' : 'Your payment is confirmed. We’re getting your order ready.';
+  const shippingMessage = donationOnly ? '' : `<p><strong>Shipping to</strong><br>${safeAddress || 'Address provided at checkout'}</p><p>We’ll follow up with delivery updates when they’re available.</p>`;
+  const shippingText = donationOnly ? '' : `\nShipping to: ${addressText || 'Address provided at checkout'}\n\nWe’ll follow up with delivery updates when they’re available.`;
 
   if (!order.customer_receipt_sent) {
     await sendResendEmail({
       order,
       type: 'customer-receipt',
       to: order.customer_email,
-      subject: `${membershipIncluded ? 'Your VIP Access Membership payment is confirmed' : donationOnly ? 'Your Halloween contribution is confirmed' : 'Your Jonathan Roumie Shop order is confirmed'} (${order.tx_ref})`,
-      html: `<div style="font-family:Arial,sans-serif;color:#24231f;max-width:600px;margin:auto"><p style="letter-spacing:.12em;font-size:12px">JONATHAN ROUMIE ${membershipIncluded ? 'VIP ACCESS' : donationOnly ? 'COMMUNITY GIVING' : 'SHOP'}</p><h1 style="font-family:Georgia,serif">Thank you, ${safeName}.</h1><p>${receiptMessage}</p><p><strong>Reference:</strong> ${safeRef}</p><table style="width:100%;border-collapse:collapse">${itemRows}<tr><td style="padding:12px 10px"><strong>Total paid</strong></td><td style="padding:12px 10px;text-align:right"><strong>${total}</strong></td></tr></table>${shippingMessage}</div>`,
+      subject: `${donationOnly ? 'Your Halloween contribution is confirmed' : 'Your Jonathan Roumie Shop order is confirmed'} (${order.tx_ref})`,
+      html: `<div style="font-family:Arial,sans-serif;color:#24231f;max-width:600px;margin:auto"><p style="letter-spacing:.12em;font-size:12px">JONATHAN ROUMIE ${donationOnly ? 'COMMUNITY GIVING' : 'SHOP'}</p><h1 style="font-family:Georgia,serif">Thank you, ${safeName}.</h1><p>${receiptMessage}</p><p><strong>Reference:</strong> ${safeRef}</p><table style="width:100%;border-collapse:collapse">${itemRows}<tr><td style="padding:12px 10px"><strong>Total paid</strong></td><td style="padding:12px 10px;text-align:right"><strong>${total}</strong></td></tr></table>${shippingMessage}</div>`,
       text: `Thank you, ${order.customer_name}. ${receiptMessage}\n\nReference: ${order.tx_ref}\n${itemText}\n\nTotal paid: ${total}${shippingText}`
     });
     await markNotificationSent('orders', order, 'customer_receipt_sent');

@@ -18,9 +18,11 @@ const handlers = {
   '/api/checkout': require('./api/checkout'),
   '/api/ticket-checkout': require('./api/ticket-checkout'),
   '/api/flutterwave-webhook': require('./api/flutterwave-webhook'),
-  '/api/inquiry': require('./api/inquiry')
+  '/api/inquiry': require('./api/inquiry'),
+  '/api/payment-return': require('./api/payment-return'),
+  '/api/recommendation': require('./api/recommendation')
 };
-const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
+const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.avif': 'image/avif' };
 
 async function dispatchApi(request, response, handler) {
   let raw = '';

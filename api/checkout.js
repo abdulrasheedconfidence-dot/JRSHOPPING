@@ -148,7 +148,7 @@ module.exports = async function checkout(req, res) {
         tx_ref: txRef,
         amount: String(amount),
         currency: CURRENCY,
-        redirect_url: `${siteUrl}/?payment=return`,
+        redirect_url: `${siteUrl}/thank-you.html`,
         customer: { email: customer.email.trim(), name: customer.name.trim(), phonenumber: customer.phone.trim() },
         meta: { order_id: storedOrder.id },
         customizations: { title: 'Jonathan Roumie Shop', description: paymentDescription }

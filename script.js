@@ -24,6 +24,33 @@ if (donationChoice && fixedDonations[donationChoice]) {
 }
 const money = amount => new Intl.NumberFormat('en-US', { style: 'currency', currency: SHOP_CURRENCY }).format(amount);
 
+function productSlug(name) {
+  return name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function syncProductLink(link) {
+  const card = link.closest('.product-card');
+  if (!card) return;
+  const product = link.dataset.product;
+  const image = card.querySelector('.product-photo');
+  const variantSelect = card.querySelector('[data-product-variant]');
+  const colorSelect = card.querySelector('[data-tee-color]');
+  const sizeSelect = card.querySelector('[data-tee-size], [data-apparel-size]');
+  const query = new URLSearchParams({ product: productSlug(product) });
+  if (colorSelect) query.set('color', colorSelect.value);
+  if (sizeSelect || variantSelect) query.set('size', variantSelect?.value || sizeSelect?.value || '');
+  link.href = `product.html?${query}`;
+  const title = card.querySelector('.product-info h3');
+  if (title && !title.querySelector('a')) {
+    const titleLink = document.createElement('a');
+    titleLink.textContent = title.textContent.trim();
+    titleLink.href = link.href;
+    title.replaceChildren(titleLink);
+  } else if (title?.querySelector('a')) title.querySelector('a').href = link.href;
+}
+
+document.querySelectorAll('[data-product]').forEach(syncProductLink);
+
 const categoryButtons = document.querySelectorAll('.category');
 const productCards = document.querySelectorAll('.product-card');
 categoryButtons.forEach(button => button.addEventListener('click', () => {
@@ -40,6 +67,8 @@ document.querySelectorAll('[data-product-variant]').forEach(select => select.add
   const price = Number(select.selectedOptions[0]?.dataset.price);
   const display = select.closest('.product-card')?.querySelector('[data-variant-price]');
   if (display && Number.isFinite(price)) display.textContent = money(price);
+  const link = select.closest('.product-card')?.querySelector('[data-product]');
+  if (link) syncProductLink(link);
 }));
 document.querySelectorAll('[data-tee-color]').forEach(select => select.addEventListener('change', () => {
   const option = select.selectedOptions[0];
@@ -48,40 +77,8 @@ document.querySelectorAll('[data-tee-color]').forEach(select => select.addEventL
     image.src = option.dataset.image;
     image.alt = `The Roumie Club T-shirt in ${option.value}`;
   }
-}));
-document.querySelectorAll('[data-product]').forEach(link => link.addEventListener('click', event => {
-  event.preventDefault();
-  const productCard = link.closest('.product-card');
-  const teeColor = link.dataset.productOptions === 'tee' ? productCard?.querySelector('[data-tee-color]')?.value : null;
-  const teeSize = link.dataset.productOptions === 'tee' ? productCard?.querySelector('[data-tee-size]')?.value : link.dataset.productOptions === 'sized' ? productCard?.querySelector('[data-apparel-size]')?.value : null;
-  const variant = productCard?.querySelector('[data-product-variant]')?.selectedOptions[0];
-  const name = teeColor ? `${link.dataset.product} — ${teeColor} — ${teeSize}` : teeSize ? `${link.dataset.product} — ${teeSize}` : variant ? `${link.dataset.product} — ${variant.value}` : link.dataset.product;
-  const price = teeColor ? Number(link.dataset.price) : variant ? Number(variant.dataset.price) : Number(link.dataset.price);
-  if (link.dataset.freeOver) {
-    const subtotal = [...cart.values()].filter(item => item.name !== 'A Note From Jonathan').reduce((sum, item) => sum + item.price * item.quantity, 0);
-    if (subtotal <= Number(link.dataset.freeOver)) {
-      toast.textContent = `The note is free with orders over ${money(Number(link.dataset.freeOver))}. Add eligible items first.`;
-      toast.classList.add('show');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => toast.classList.remove('show'), 3200);
-      return;
-    }
-    if (cart.has(name)) {
-      toast.textContent = 'One free note is included with each qualifying order.';
-      toast.classList.add('show');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => toast.classList.remove('show'), 2600);
-      return;
-    }
-  }
-  const item = cart.get(name) || { name, price, quantity: 0 };
-  item.quantity += 1;
-  cart.set(name, item);
-  renderCart();
-  toast.textContent = `${name} added to your cart.`;
-  toast.classList.add('show');
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => toast.classList.remove('show'), 2200);
+  const link = select.closest('.product-card')?.querySelector('[data-product]');
+  if (link) syncProductLink(link);
 }));
 
 const cartDialog = document.getElementById('cart');
@@ -163,6 +160,7 @@ document.getElementById('shipping-form').addEventListener('submit', async event 
 });
 renderCart();
 if (launchParams.has('donation')) requestAnimationFrame(() => cartDialog.showModal());
+if (launchParams.has('cart')) requestAnimationFrame(() => cartDialog.showModal());
 
 const modal = document.getElementById('booking');
 const bookingKind = document.getElementById('booking-kind');

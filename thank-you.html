@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2ec">
+  <meta name="description" content="Order payment confirmation from the Jonathan Roumie shop.">
+  <title>Order update — Jonathan Roumie Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="thank-you.css">
+</head>
+<body class="thank-you-page">
+  <div class="announcement">A little something from Jonathan, just for you <span aria-hidden="true">✳</span></div>
+  <header class="site-header thank-you-header">
+    <a class="wordmark" href="index.html#home" aria-label="Jonathan Roumie home">JONATHAN<span>ROUMIE</span><i>®</i></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html#shop">The shop</a><a href="donate.html">Halloween giving</a><a href="tickets.html">Tickets</a></nav>
+    <a class="bag-link" href="index.html#shop">Return to shop ↗</a>
+  </header>
+  <main class="thank-you-main">
+    <section class="payment-result" aria-labelledby="result-title" aria-live="polite">
+      <span class="result-mark" id="result-mark" aria-hidden="true">…</span>
+      <p class="eyebrow" id="result-kicker">PAYMENT STATUS</p>
+      <h1 id="result-title">Checking your payment…</h1>
+      <p class="result-message" id="result-message">Please wait while we securely confirm the payment with the payment provider.</p>
+      <p class="order-reference" id="order-reference" hidden></p>
+      <button class="button button-dark retry-payment" id="retry-payment" type="button" hidden>Check again <span aria-hidden="true">↻</span></button>
+      <a class="button button-dark return-shop" id="return-shop" href="index.html#shop" hidden>Return to the shop <span aria-hidden="true">↗</span></a>
+    </section>
+    <section class="recommendation-panel" id="recommendation-panel" aria-labelledby="recommendation-title" hidden>
+      <div><p class="eyebrow">A NOTE FOR JONATHAN</p><h2 id="recommendation-title">Help us make<br><em>the shop better.</em></h2><p>If you’d like, leave a suggestion or recommendation for the shop. This is optional and won’t affect your order.</p></div>
+      <form id="recommendation-form">
+        <label for="recommendation-message">YOUR MESSAGE</label>
+        <textarea id="recommendation-message" name="message" rows="5" maxlength="1200" minlength="5" placeholder="What could make your experience better?" required></textarea>
+        <small>5 to 1,200 characters. We’ll link your message to this order so the team can follow up if needed.</small>
+        <button class="button button-dark" id="recommendation-submit" type="submit">Send recommendation <span aria-hidden="true">↗</span></button>
+        <p class="recommendation-status" id="recommendation-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <footer class="site-footer"><a class="wordmark footer-wordmark" href="index.html#home">JONATHAN<span>ROUMIE</span><i>®</i></a><p>A little more good, wherever you are.</p><div class="footer-right"><a href="index.html#shop">Shop</a><a href="donate.html">Halloween giving</a><a href="index.html#experiences">Experiences</a><span>© 2025 Jonathan Roumie</span></div></footer>
+  <script src="thank-you.js"></script>
+</body>
+</html>

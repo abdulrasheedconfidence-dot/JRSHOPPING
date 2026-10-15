@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2ec">
+  <meta name="description" content="Product details from the Jonathan Roumie shop.">
+  <title>Product details — Jonathan Roumie Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="product.css">
+</head>
+<body class="product-page">
+  <div class="announcement">A little something from Jonathan, just for you <span aria-hidden="true">✳</span></div>
+  <header class="site-header product-header">
+    <a class="wordmark" href="index.html#home" aria-label="Jonathan Roumie home">JONATHAN<span>ROUMIE</span><i>®</i></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html#shop">The shop</a><a href="donate.html">Halloween giving</a><a href="tickets.html">Tickets</a><a href="index.html#experiences">Experiences</a></nav>
+    <a class="bag-link" id="product-cart-link" href="index.html?cart=1#shop">Your cart <span id="product-cart-count">0</span> ↗</a>
+  </header>
+  <main>
+    <p class="product-breadcrumb"><a href="index.html#shop">The shop</a><span aria-hidden="true">/</span><span id="product-category">Product</span></p>
+    <section class="product-detail" aria-labelledby="product-title">
+        <div class="product-detail-image" id="product-image-wrap"><img id="product-image" alt="" hidden><div class="product-image-placeholder" id="product-placeholder" aria-hidden="true">Product image</div><span class="product-detail-badge" id="product-badge" hidden></span></div>
+      <div class="product-detail-copy">
+        <p class="eyebrow" id="product-kicker">JONATHAN ROUMIE SHOP</p>
+        <h1 id="product-title">Loading product…</h1>
+        <p class="product-detail-price" id="product-price"></p>
+        <p class="product-detail-description" id="product-description"></p>
+        <div id="product-options" class="product-detail-options"></div>
+        <div class="product-quantity"><label for="product-quantity">QUANTITY</label><div class="quantity-picker"><button type="button" id="quantity-minus" aria-label="Decrease quantity">−</button><input id="product-quantity" type="number" value="1" min="1" max="50" step="1" inputmode="numeric"><button type="button" id="quantity-plus" aria-label="Increase quantity">+</button></div></div>
+        <div class="product-line-total"><span>Item total</span><strong id="product-line-total">$0.00</strong></div>
+        <button class="button button-dark product-add-button" id="product-add" type="button" disabled>Add to cart <span aria-hidden="true">↗</span></button>
+        <p class="product-add-status" id="product-status" role="status" aria-live="polite"></p>
+        <p class="product-payment-note">One-time payment through Flutterwave. No automatic renewal. Free delivery.</p>
+        <a class="product-view-cart" href="index.html?cart=1#shop">View cart and checkout <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+    <section class="product-information" aria-labelledby="product-information-title">
+      <div><p class="eyebrow">THE STORY BEHIND THE PIECE</p><h2 id="product-information-title">Inspired by<br><em>The Chosen.</em></h2></div>
+      <div class="product-information-copy"><p id="product-detail-copy"></p><p id="product-inspiration"></p><p id="product-option-summary"></p></div>
+    </section>
+    <section class="product-feedback" aria-labelledby="product-feedback-title">
+      <div><p class="eyebrow">CUSTOMER FEEDBACK</p><h2 id="product-feedback-title">Your experience<br><em>matters to us.</em></h2></div>
+      <div class="product-feedback-empty"><span aria-hidden="true">✳</span><h3>No customer reviews yet</h3><p>We’ll share customer feedback here when it’s available. We don’t display sample or unverified ratings.</p></div>
+    </section>
+  </main>
+  <aside class="product-sticky-cart" aria-label="Cart shortcut"><span><strong id="sticky-product-count">0 items</strong><small>Your cart is saved while you browse</small></span><a href="index.html?cart=1#shop">View cart <span aria-hidden="true">→</span></a></aside>
+  <footer class="site-footer"><a class="wordmark footer-wordmark" href="index.html#home">JONATHAN<span>ROUMIE</span><i>®</i></a><p>A little more good, wherever you are.</p><div class="footer-right"><a href="index.html#shop">Shop</a><a href="donate.html">Halloween giving</a><a href="index.html#experiences">Experiences</a><a href="mailto:hello@jonathanroumie.com">Get in touch</a><span>© 2025 Jonathan Roumie</span></div></footer>
+  <script src="product-catalog.js"></script>
+  <script src="product-detail.js"></script>
+</body>
+</html>

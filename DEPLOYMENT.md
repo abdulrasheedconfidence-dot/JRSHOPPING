@@ -11,12 +11,12 @@ In Flutterwave, also create a separate random **webhook secret hash** under Sett
 ## 2. Create the Supabase database
 
 1. Create a Supabase project and choose a region close to your customers.
-2. In the Supabase SQL Editor, run all files in `supabase/migrations/`, in order: `202609250001_orders.sql`, `202609250002_booking_inquiries.sql`, `202609250003_order_email_status.sql`, and `202609250004_sheen_ticket_orders.sql`. If you already ran earlier migrations, run only the ones you have not applied yet.
+2. In the Supabase SQL Editor, run every `.sql` file in `supabase/migrations/` in filename order, including `202610150001_customer_recommendations.sql`. If you already ran earlier migrations, run only the ones you have not applied yet.
 3. In Project Settings → API, copy the Project URL and create/copy a server-only secret key (the key beginning `sb_secret_`).
 
 The `orders` table has Row Level Security enabled and denies browser roles. Only the server-only Supabase secret can insert and update order rows. Never add that secret to browser JavaScript.
 
-The `booking_inquiries` and `event_ticket_orders` tables are also restricted to the server. Review meet-and-greet or Zoom requests in `booking_inquiries`, and Sheen Awards purchases in `event_ticket_orders`.
+The `booking_inquiries`, `event_ticket_orders`, and `customer_recommendations` tables are also restricted to the server. Review meet-and-greet or Zoom requests in `booking_inquiries`, Sheen Awards purchases in `event_ticket_orders`, and paid-customer recommendations in `customer_recommendations`.
 
 ## 3. Put the project in GitHub
 
@@ -47,7 +47,7 @@ The `booking_inquiries` and `event_ticket_orders` tables are also restricted to 
 
 ### Email alerts for availability requests
 
-Create a Resend account, verify a sending domain, create an API key, and add that key plus the verified sender address in Vercel. The recipient is already set to `jonathanroumie.officialchosen02@gmail.com`. The same setup sends availability inquiry alerts and paid-order notices to you, and sends a receipt to the customer after Flutterwave verifies payment. Until Resend is fully configured, orders and inquiries are still saved in Supabase; configure Flutterwave webhook retries so a paid order's email can be retried after a temporary Resend issue. [Resend domain setup](https://resend.com/docs/dashboard/domains/introduction)
+Create a Resend account, verify a sending domain, create an API key, and add that key plus the verified sender address in Vercel. The recipient is already set to `jonathanroumie.officialchosen02@gmail.com`. The same setup sends availability inquiry alerts, paid-order notices, and customer recommendations to you, and sends a receipt to the customer after Flutterwave verifies payment. Until Resend is fully configured, orders, inquiries, and recommendations are still saved in Supabase; configure Flutterwave webhook retries so a paid order's email can be retried after a temporary Resend issue. [Resend domain setup](https://resend.com/docs/dashboard/domains/introduction)
 
 ## 5. Point Flutterwave webhooks at the site
 

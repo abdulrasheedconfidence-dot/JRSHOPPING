@@ -5,6 +5,21 @@
   const ticketSubmit = document.getElementById('ticket-submit');
   const quantityFields = ticketForm ? [...ticketForm.querySelectorAll('[name="generalAdmission"], [name="vipExperience"]')] : [];
   const ticketMoney = amount => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount);
+  const ticketSalesClosed = Date.now() >= Date.parse('2026-09-25T19:30:00-05:00');
+
+  if (ticketForm && ticketSalesClosed) {
+    quantityFields.forEach(field => { field.disabled = true; });
+    ticketForm.querySelectorAll('.ticket-quantity').forEach(label => { label.hidden = true; });
+    const buyerFields = ticketForm.querySelector('.ticket-buyer-fields');
+    if (buyerFields) buyerFields.hidden = true;
+    ticketSubmit.disabled = true;
+    ticketSubmit.textContent = 'Ticket sales closed';
+    const notice = document.createElement('p');
+    notice.className = 'ticket-closed-note';
+    notice.setAttribute('role', 'status');
+    notice.textContent = 'Ticket sales for the September 25, 2026 event are closed.';
+    ticketForm.after(notice);
+  }
 
   function updateTicketTotal() {
     if (!ticketForm || !ticketTotal) return;

@@ -9,7 +9,18 @@ const products = Array.isArray(window.PRODUCT_CATALOG) ? window.PRODUCT_CATALOG 
 function safeCartRead() {
   try {
     const value = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
-    return Array.isArray(value) ? value.filter(item => item && typeof item.name === 'string' && Number.isFinite(Number(item.price)) && Number.isInteger(Number(item.quantity)) && Number(item.quantity) > 0) : [];
+    if (!Array.isArray(value)) return [];
+    const migrated = new Map();
+    for (const item of value.filter(item => item && typeof item.name === 'string' && Number.isFinite(Number(item.price)) && Number.isInteger(Number(item.quantity)) && Number(item.quantity) > 0)) {
+      const isCollectionPreorder = item.name === 'J. Roumie Collection Pre-order' || item.name === 'JR Collection Pre-order';
+      const normalized = isCollectionPreorder ? { ...item, name: 'JR Collection Pre-order', price: 499.99 } : item;
+      const previous = migrated.get(normalized.name);
+      if (previous) previous.quantity = Math.min(50, Number(previous.quantity) + Number(normalized.quantity));
+      else migrated.set(normalized.name, { ...normalized, price: Number(normalized.price), quantity: Number(normalized.quantity) });
+    }
+    const result = [...migrated.values()];
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(result));
+    return result;
   } catch { return []; }
 }
 
@@ -43,7 +54,7 @@ function initProduct(product) {
 
   document.title = `${product.title} — Jonathan Roumie Shop`;
   document.querySelector('meta[name="description"]').content = `${product.description} View product details and options for ${product.title}.`;
-  document.getElementById('product-category').textContent = ({ wear: 'Wear it', home: 'Keep it close', care: 'Care packages', personalized: 'Personalized gifts', rosary: 'Rosaries' })[product.category] || 'Shop';
+  document.getElementById('product-category').textContent = ({ wear: 'Wear it', home: 'Keep it close', care: 'Care packages', personalized: 'Personalized gifts', rosary: 'Rosaries', collection: 'JR Collection' })[product.category] || 'Shop';
   document.getElementById('product-kicker').textContent = product.badge || 'JONATHAN ROUMIE SHOP';
   document.getElementById('product-title').textContent = product.title;
   document.getElementById('product-description').textContent = product.description;

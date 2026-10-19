@@ -1,6 +1,7 @@
 const crypto = require('node:crypto');
 
 const PRODUCTS = {
+  'JR Collection Pre-order': 499.99,
   'The Roumie Club Tee — White — S': 50,
   'The Roumie Club Tee — White — M': 50,
   'The Roumie Club Tee — White — L': 50,

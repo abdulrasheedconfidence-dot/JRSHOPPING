@@ -1,6 +1,12 @@
 /* Product detail copy and options shared by all detail-page links. */
 window.PRODUCT_CATALOG = [
   {
+    id: 'jr-collection-pre-order', product: 'JR Collection Pre-order', title: 'JR Collection', price: 499.99, category: 'collection', badge: 'PRE-ORDER · COMING SOON', image: '', alt: '',
+    description: 'Reserve the upcoming JR Collection for $499.99. A throwback apparel collection inspired by Jonathan’s early high-school era and the jackets and clothes that defined it.',
+    inspiration: 'This collection looks back to a formative high-school style era and brings that nostalgic feeling into a new apparel collection.',
+    details: 'Pre-order price: $499.99. The collection is coming soon; release timing, specific pieces, available sizes and colors will be announced when confirmed.'
+  },
+  {
     id: 'hallow-ghirelli-collaborative-rosary-standard', product: 'Hallow × Ghirelli Collaborative Rosary — Standard', title: 'Hallow × Ghirelli Rosary', price: 51, category: 'rosary', badge: 'HALLOW × GHIRELLI', image: 'images/ghirelli-rosary-hand.webp', alt: 'Jonathan Roumie holding a beaded rosary',
     description: 'Standard collaborative edition. A devotional keepsake for moments of prayer and reflection.',
     inspiration: 'This Hallow × Ghirelli collaboration is featured in the collection for fans who connect with the prayer, faith and community at the heart of The Chosen.',

@@ -8,7 +8,21 @@ try {
   const parsedCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
   if (Array.isArray(parsedCart)) savedCart = parsedCart.filter(item => item && typeof item.name === 'string' && Number.isFinite(Number(item.price)) && Number.isInteger(Number(item.quantity)) && Number(item.quantity) > 0);
 } catch { /* Start with an empty cart if browser storage is unavailable or invalid. */ }
-const cart = new Map(savedCart.map(item => [item.name, { ...item, price: Number(item.price), quantity: Number(item.quantity) }]));
+function migrateSavedCart(items) {
+  const migrated = new Map();
+  for (const item of items) {
+    const isCollectionPreorder = item.name === 'J. Roumie Collection Pre-order' || item.name === 'JR Collection Pre-order';
+    const normalized = isCollectionPreorder
+      ? { ...item, name: 'JR Collection Pre-order', price: 499.99, quantity: Number(item.quantity) }
+      : { ...item, price: Number(item.price), quantity: Number(item.quantity) };
+    const previous = migrated.get(normalized.name);
+    if (previous) previous.quantity = Math.min(50, previous.quantity + normalized.quantity);
+    else migrated.set(normalized.name, normalized);
+  }
+  return migrated;
+}
+const cart = migrateSavedCart(savedCart);
+try { localStorage.setItem(CART_STORAGE_KEY, JSON.stringify([...cart.values()])); } catch { /* Keep the in-memory cart if browser storage is unavailable. */ }
 const launchParams = new URLSearchParams(location.search);
 const donationChoice = launchParams.get('donation');
 const fixedDonations = { '100': 100, '150': 150, '1000': 1000 };
@@ -116,7 +130,7 @@ function renderCart() {
     }
   });
   document.querySelector('.shipping-modal h2').textContent = noShippingOnly ? 'Your details for giving' : 'Where should we send it?';
-  document.querySelector('.shipping-modal .modal-description').textContent = noShippingOnly ? 'Enter your contact details to continue to secure Flutterwave checkout.' : 'Enter your contact and delivery details, then continue to secure Flutterwave checkout.';
+  document.querySelector('.shipping-modal .modal-description').textContent = noShippingOnly ? 'Enter your contact details to continue to secure payment checkout.' : 'Enter your contact and delivery details, then continue to secure payment checkout.';
 }
 document.getElementById('cart-trigger').addEventListener('click', () => cartDialog.showModal());
 document.getElementById('cart-close').addEventListener('click', () => cartDialog.close());

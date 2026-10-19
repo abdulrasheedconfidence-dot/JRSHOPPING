@@ -27,7 +27,7 @@ body:has(.sticky-checkout){padding-bottom:94px}.sticky-checkout{position:fixed;z
 .price{font-size:12px}
 :where(a,button,input,select,textarea):focus-visible{outline:3px solid #a96d4c;outline-offset:3px}
 @media(max-width:600px){
-  body:not(.campaign-page):not(.tickets-page):not(.product-page) .site-header .main-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));justify-content:stretch;gap:4px;font-size:9px;white-space:normal}
+  body:not(.campaign-page):not(.tickets-page):not(.product-page) .site-header .main-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));justify-content:stretch;gap:4px;font-size:9px;white-space:normal}
   body:not(.campaign-page):not(.tickets-page):not(.product-page) .site-header .main-nav a{justify-content:center;min-height:40px;padding:3px;text-align:center;line-height:1.25}
   .product-info h3{font-size:12px}
   .product-info p{font-size:10px}

@@ -140,7 +140,10 @@ function initProduct(product) {
   quantityInput.addEventListener('input', () => setQuantity(quantityInput.value));
   quantityMinus.addEventListener('click', () => setQuantity(Number(quantityInput.value) - 1));
   quantityPlus.addEventListener('click', () => setQuantity(Number(quantityInput.value) + 1));
-  addButton.disabled = false;
+  const preorderLocked = product.id === 'jr-collection-pre-order' && Date.now() < Date.parse('2026-10-19T10:00:00-04:00');
+  const launchStatus = document.getElementById('product-launch-status');
+  if (launchStatus) launchStatus.hidden = !preorderLocked;
+  addButton.disabled = preorderLocked;
   addButton.addEventListener('click', addToCart);
   setQuantity(1);
   updateImage();

@@ -42,6 +42,7 @@ const PRODUCTS = {
     ["Don't Let Me Go Tee — " + size, 20]
   ]).reduce((products, [name, price]) => ({ ...products, [name]: price }), {})
 };
+const JR_COLLECTION_LAUNCH_AT = Date.parse('2026-10-19T10:00:00-04:00');
 const DONATIONS = new Set(['Halloween Donation — $100', 'Halloween Donation — $150', 'Halloween Donation — $1000']);
 const isDonationName = name => DONATIONS.has(name) || (typeof name === 'string' && /^Halloween Donation — Custom — \$\d+$/.test(name));
 const isNoShippingName = name => isDonationName(name);
@@ -75,6 +76,9 @@ module.exports = async function checkout(req, res) {
   if (!process.env.FLW_SECRET_KEY) return reply(res, 503, { error: 'Secure checkout is not configured yet. Please contact the shop.' });
 
   const customer = req.body?.customer || {};
+  if (Array.isArray(req.body.items) && req.body.items.some(line => line?.name === 'JR Collection Pre-order') && Date.now() < JR_COLLECTION_LAUNCH_AT) {
+    return reply(res, 403, { error: 'JR Collection pre-orders open at 10:00 AM New York time.' });
+  }
   const hasPhysicalItems = Array.isArray(req.body.items) && req.body.items.some(line => !isNoShippingName(line.name));
   const required = ['name', 'email', 'phone', ...(hasPhysicalItems ? ['country', 'address', 'city', 'state'] : [])];
   if (required.some(field => typeof customer[field] !== 'string' || !customer[field].trim())) {

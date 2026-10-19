@@ -20,6 +20,7 @@
 .product-detail-options select{width:100%;min-height:48px;padding:0 12px;border:1px solid #d8d3c7;background:#fffdf8;color:#292a25;font:14px var(--sans);letter-spacing:0}
 .product-detail-options select:focus-visible,.product-add-button:focus-visible,.product-view-cart:focus-visible{outline:3px solid #a96d4c;outline-offset:3px}
 .product-add-button{width:100%;justify-content:center;min-height:58px;font-size:15px}
+.product-launch-status{margin:10px 0;padding:13px 15px;border-left:3px solid #a66d4e;background:#eee8dc;color:#4e493f;font-size:12px;line-height:1.6}
 .product-add-button:disabled{opacity:.55;cursor:wait}
 .product-add-status{min-height:20px;margin:10px 0;color:#4d5a43;font-size:12px}
 .product-payment-note{margin:11px 0;color:#77756b;font-size:11px;line-height:1.6}

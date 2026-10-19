@@ -31,6 +31,7 @@
         <div id="product-options" class="product-detail-options"></div>
         <div class="product-quantity"><label for="product-quantity">QUANTITY</label><div class="quantity-picker"><button type="button" id="quantity-minus" aria-label="Decrease quantity">−</button><input id="product-quantity" type="number" value="1" min="1" max="50" step="1" inputmode="numeric"><button type="button" id="quantity-plus" aria-label="Increase quantity">+</button></div></div>
         <div class="product-line-total"><span>Item total</span><strong id="product-line-total">$0.00</strong></div>
+        <p class="product-launch-status" id="product-launch-status" role="status" hidden>Pre-orders open at 10:00 AM New York time. The JR Collection cannot be added to your cart yet.</p>
         <button class="button button-dark product-add-button" id="product-add" type="button" disabled>Add to cart <span aria-hidden="true">↗</span></button>
         <p class="product-add-status" id="product-status" role="status" aria-live="polite"></p>
         <p class="product-payment-note">One-time payment through our secure payment provider. No automatic renewal. Free delivery.</p>
@@ -49,6 +50,7 @@
   <aside class="product-sticky-cart" aria-label="Cart shortcut"><span><strong id="sticky-product-count">0 items</strong><small>Your cart is saved while you browse</small></span><a href="index.html?cart=1#shop">View cart <span aria-hidden="true">→</span></a></aside>
   <footer class="site-footer"><a class="wordmark footer-wordmark" href="index.html#home">JONATHAN<span>ROUMIE</span><i>®</i></a><p>A little more good, wherever you are.</p><div class="footer-right"><a href="index.html#shop">Shop</a><a href="donate.html">Halloween giving</a><a href="index.html#experiences">Experiences</a><a href="mailto:hello@jonathanroumie.com">Get in touch</a><span>© 2025 Jonathan Roumie</span></div></footer>
   <script src="product-catalog.js"></script>
+  <script src="jr-launch.js"></script>
   <script src="product-detail.js"></script>
 </body>
 </html>

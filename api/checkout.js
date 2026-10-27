@@ -99,13 +99,17 @@ module.exports = async function checkout(req, res) {
     lines.push({ name: line.name, quantity, unit_price: unitPrice, line_total: unitPrice * quantity });
   }
   const itemsTotal = lines.reduce((sum, line) => sum + line.line_total, 0);
+  const couponCode = typeof req.body.couponCode === 'string' ? req.body.couponCode.trim().toUpperCase() : '';
+  const couponRates = { CHOSEN30: 0.30, JR40: 0.40 };
+  if (couponCode && !Object.hasOwn(couponRates, couponCode)) return reply(res, 400, { error: 'That coupon code is not valid.' });
+  const discountAmount = couponCode ? Math.round(itemsTotal * couponRates[couponCode] * 100) / 100 : 0;
   if (lines.some(line => line.name === 'A Note From Jonathan') && itemsTotal <= 200) {
     return reply(res, 400, { error: 'The free note is available with orders over $200.' });
   }
   if (lines.some(line => line.name === 'A Note From Jonathan' && line.quantity !== 1)) {
     return reply(res, 400, { error: 'Only one free note is included with each qualifying order.' });
   }
-  const amount = itemsTotal + SHIPPING_FEE;
+  const amount = Math.max(0, itemsTotal - discountAmount + SHIPPING_FEE);
   if (!Number.isFinite(amount) || amount <= 0) return reply(res, 400, { error: 'The order total is not valid.' });
   const hasDonation = lines.some(line => isDonationName(line.name));
   const paymentDescription = hasDonation ? 'Halloween community contribution' : 'Shop order';
@@ -116,7 +120,7 @@ module.exports = async function checkout(req, res) {
     payment_status: 'pending_payment',
     currency: CURRENCY,
     amount,
-    items: lines,
+    items: couponCode ? [...lines, { name: `Coupon ${couponCode} — ${Math.round(couponRates[couponCode] * 100)}% off`, quantity: 1, unit_price: -discountAmount, line_total: -discountAmount, type: 'discount' }] : lines,
     customer_name: customer.name.trim(),
     customer_email: customer.email.trim(),
     customer_phone: customer.phone.trim(),

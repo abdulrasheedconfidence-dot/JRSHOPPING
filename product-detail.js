@@ -36,6 +36,7 @@ function fail() {
 }
 
 function initProduct(product) {
+  document.body.classList.toggle('product-page--jr-collection', product.id === 'jr-collection-pre-order');
   const image = document.getElementById('product-image');
   const placeholder = document.getElementById('product-placeholder');
   const badge = document.getElementById('product-badge');

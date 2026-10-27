@@ -1,7 +1,7 @@
 /* Product detail copy and options shared by all detail-page links. */
 window.PRODUCT_CATALOG = [
   {
-    id: 'jr-collection-pre-order', product: 'JR Collection Pre-order', title: 'JR Collection', price: 499.99, category: 'collection', badge: 'PRE-ORDER · COMING SOON', image: '', alt: '',
+    id: 'jr-collection-pre-order', product: 'JR Collection Pre-order', title: 'JR Collection', price: 499.99, category: 'collection', badge: 'PRE-ORDER · COMING SOON', image: 'images/jr-collection-product.jpg', alt: 'Jonathan in a denim jacket and jeans beside a canvas painted with JR Collection lettering',
     description: 'Reserve the upcoming JR Collection for $499.99. A throwback apparel collection inspired by Jonathan’s early high-school era and the jackets and clothes that defined it.',
     inspiration: 'This collection looks back to a formative high-school style era and brings that nostalgic feeling into a new apparel collection.',
     details: 'Pre-order price: $499.99. The collection is coming soon; release timing, specific pieces, available sizes and colors will be announced when confirmed.'

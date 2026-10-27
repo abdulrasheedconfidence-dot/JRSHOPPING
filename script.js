@@ -3,6 +3,10 @@ const CHECKOUT_ENDPOINT = "/api/checkout";
 const SHOP_CURRENCY = "USD";
 const SHIPPING_FEE = 0; // Shipping is free.
 const CART_STORAGE_KEY = 'roumie-shop-cart';
+const COUPON_STORAGE_KEY = 'roumie-shop-coupon';
+const COUPON_RATES = { CHOSEN30: 0.30, JR40: 0.40 };
+let appliedCoupon = '';
+try { appliedCoupon = Object.hasOwn(COUPON_RATES, localStorage.getItem(COUPON_STORAGE_KEY)) ? localStorage.getItem(COUPON_STORAGE_KEY) : ''; } catch { /* Coupon remains usable in memory. */ }
 let savedCart = [];
 try {
   const parsedCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
@@ -103,10 +107,18 @@ function renderCart() {
   try { localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items)); } catch { /* Cart remains usable for this page view. */ }
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discountRate = COUPON_RATES[appliedCoupon] || 0;
+  const discount = discountRate ? Math.round(total * discountRate * 100) / 100 : 0;
+  const orderTotal = Math.max(0, total - discount + SHIPPING_FEE);
   document.getElementById('cart-count').textContent = count;
-  document.getElementById('cart-total').textContent = money(total + SHIPPING_FEE);
+  document.getElementById('cart-total').textContent = money(orderTotal);
   document.getElementById('cart-subtotal').textContent = money(total);
   document.getElementById('cart-shipping').textContent = money(SHIPPING_FEE);
+  document.getElementById('coupon-discount-row').hidden = !appliedCoupon;
+  document.getElementById('coupon-discount').textContent = `−${money(discount)}`;
+  document.getElementById('coupon-code').value = appliedCoupon;
+  document.getElementById('coupon-status').textContent = appliedCoupon ? `${appliedCoupon} applied — ${Math.round(discountRate * 100)}% off your cart.` : '';
+  document.querySelector('#coupon-discount-row span').textContent = appliedCoupon ? `${appliedCoupon} · ${Math.round(discountRate * 100)}% off` : '';
   const list = document.getElementById('cart-items');
   list.innerHTML = items.length ? items.map(item => `<div class="cart-item"><div><strong>${item.name}</strong><small>${money(item.price)} each</small></div><div class="quantity-control"><button type="button" data-cart-action="minus" data-name="${item.name}" aria-label="Remove one ${item.name}">−</button><span>${item.quantity}</span><button type="button" data-cart-action="plus" data-name="${item.name}" aria-label="Add one ${item.name}" ${item.name === 'A Note From Jonathan' ? 'disabled' : ''}>+</button><button type="button" class="remove-item" data-cart-action="remove" data-name="${item.name}">Remove</button></div><b>${money(item.price * item.quantity)}</b></div>`).join('') : '<p class="empty-cart">Your cart is waiting for something good.</p>';
   document.getElementById('cart-checkout').disabled = !count;
@@ -116,9 +128,9 @@ function renderCart() {
   if (stickyCheckout && stickyItems && stickyTotal) {
     stickyCheckout.disabled = !count;
     stickyItems.textContent = count ? `${count} ${count === 1 ? 'item' : 'items'} in your cart` : 'Your cart is empty';
-    stickyTotal.textContent = money(total + SHIPPING_FEE);
+    stickyTotal.textContent = money(orderTotal);
   }
-  document.getElementById('shipping-total').textContent = money(total + SHIPPING_FEE);
+  document.getElementById('shipping-total').textContent = money(orderTotal);
   document.getElementById('cart-error').textContent = '';
   const noShippingOnly = items.length > 0 && items.every(item => item.name.startsWith('Halloween Donation — '));
   document.querySelectorAll('.delivery-field').forEach(label => {
@@ -132,6 +144,31 @@ function renderCart() {
   document.querySelector('.shipping-modal h2').textContent = noShippingOnly ? 'Your details for giving' : 'Where should we send it?';
   document.querySelector('.shipping-modal .modal-description').textContent = noShippingOnly ? 'Enter your contact details to continue to secure payment checkout.' : 'Enter your contact and delivery details, then continue to secure payment checkout.';
 }
+document.getElementById('coupon-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const entered = document.getElementById('coupon-code').value.trim().toUpperCase();
+  const status = document.getElementById('coupon-status');
+  if (!entered) {
+    const wasApplied = Boolean(appliedCoupon);
+    appliedCoupon = '';
+    try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch { /* Keep the in-memory state. */ }
+    renderCart();
+    document.getElementById('coupon-status').textContent = wasApplied ? 'Coupon removed.' : 'Enter a coupon code to apply a discount.';
+    return;
+  }
+  if (!Object.hasOwn(COUPON_RATES, entered)) {
+    appliedCoupon = '';
+    try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch { /* Keep the in-memory state. */ }
+    status.textContent = 'That code wasn’t recognized. Check it and try again.';
+    renderCart();
+    document.getElementById('coupon-code').value = entered;
+    document.getElementById('coupon-status').textContent = status.textContent;
+    return;
+  }
+  appliedCoupon = entered;
+  try { localStorage.setItem(COUPON_STORAGE_KEY, appliedCoupon); } catch { /* Coupon remains applied for this visit. */ }
+  renderCart();
+});
 document.getElementById('cart-trigger').addEventListener('click', () => cartDialog.showModal());
 document.getElementById('cart-close').addEventListener('click', () => cartDialog.close());
 cartDialog.addEventListener('click', event => { if (event.target === cartDialog) cartDialog.close(); });
@@ -161,7 +198,7 @@ document.getElementById('shipping-form').addEventListener('submit', async event 
   submit.disabled = true;
   status.textContent = 'Preparing your secure payment...';
   const customer = Object.fromEntries(new FormData(form).entries());
-  const payload = { customer, items: [...cart.values()].map(({ name, quantity }) => ({ name, quantity })) };
+  const payload = { customer, couponCode: appliedCoupon || undefined, items: [...cart.values()].map(({ name, quantity }) => ({ name, quantity })) };
   try {
     const response = await fetch(CHECKOUT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     const result = await response.json();

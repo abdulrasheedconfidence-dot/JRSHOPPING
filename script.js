@@ -108,7 +108,8 @@ function renderCart() {
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountRate = COUPON_RATES[appliedCoupon] || 0;
-  const discount = discountRate ? Math.round(total * discountRate * 100) / 100 : 0;
+  const discountableSubtotal = items.filter(item => !item.name.startsWith('Halloween Donation — ') && item.name !== 'A Note From Jonathan').reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discount = discountRate ? Math.round(discountableSubtotal * discountRate * 100) / 100 : 0;
   const orderTotal = Math.max(0, total - discount + SHIPPING_FEE);
   document.getElementById('cart-count').textContent = count;
   document.getElementById('cart-total').textContent = money(orderTotal);
@@ -117,7 +118,11 @@ function renderCart() {
   document.getElementById('coupon-discount-row').hidden = !appliedCoupon;
   document.getElementById('coupon-discount').textContent = `−${money(discount)}`;
   document.getElementById('coupon-code').value = appliedCoupon;
-  document.getElementById('coupon-status').textContent = appliedCoupon ? `${appliedCoupon} applied — ${Math.round(discountRate * 100)}% off your cart.` : '';
+  document.getElementById('coupon-status').textContent = appliedCoupon
+    ? discountableSubtotal > 0
+      ? `${appliedCoupon} applied — ${Math.round(discountRate * 100)}% off eligible merchandise. Donations are excluded.`
+      : `${appliedCoupon} only applies to merchandise and JR Collection items. Donations are not discounted.`
+    : '';
   document.querySelector('#coupon-discount-row span').textContent = appliedCoupon ? `${appliedCoupon} · ${Math.round(discountRate * 100)}% off` : '';
   const list = document.getElementById('cart-items');
   list.innerHTML = items.length ? items.map(item => `<div class="cart-item"><div><strong>${item.name}</strong><small>${money(item.price)} each</small></div><div class="quantity-control"><button type="button" data-cart-action="minus" data-name="${item.name}" aria-label="Remove one ${item.name}">−</button><span>${item.quantity}</span><button type="button" data-cart-action="plus" data-name="${item.name}" aria-label="Add one ${item.name}" ${item.name === 'A Note From Jonathan' ? 'disabled' : ''}>+</button><button type="button" class="remove-item" data-cart-action="remove" data-name="${item.name}">Remove</button></div><b>${money(item.price * item.quantity)}</b></div>`).join('') : '<p class="empty-cart">Your cart is waiting for something good.</p>';

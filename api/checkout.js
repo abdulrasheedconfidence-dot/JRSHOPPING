@@ -102,7 +102,9 @@ module.exports = async function checkout(req, res) {
   const couponCode = typeof req.body.couponCode === 'string' ? req.body.couponCode.trim().toUpperCase() : '';
   const couponRates = { CHOSEN30: 0.30, JR40: 0.40 };
   if (couponCode && !Object.hasOwn(couponRates, couponCode)) return reply(res, 400, { error: 'That coupon code is not valid.' });
-  const discountAmount = couponCode ? Math.round(itemsTotal * couponRates[couponCode] * 100) / 100 : 0;
+  const discountableSubtotal = lines.filter(line => !isDonationName(line.name) && line.name !== 'A Note From Jonathan').reduce((sum, line) => sum + line.line_total, 0);
+  if (couponCode && discountableSubtotal <= 0) return reply(res, 400, { error: 'Coupon codes apply only to merchandise and JR Collection items. Donations are not discounted.' });
+  const discountAmount = couponCode ? Math.round(discountableSubtotal * couponRates[couponCode] * 100) / 100 : 0;
   if (lines.some(line => line.name === 'A Note From Jonathan') && itemsTotal <= 200) {
     return reply(res, 400, { error: 'The free note is available with orders over $200.' });
   }
@@ -131,7 +133,7 @@ module.exports = async function checkout(req, res) {
       state: customer.state.trim(),
       postal_code: String(customer.postalCode || '').trim(),
       delivery_note: String(customer.deliveryNote || '').trim()
-    } : null
+    } : {}
   };
 
   let storedOrder;

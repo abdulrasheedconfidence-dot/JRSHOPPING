@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#171916">
+  <title>Admin transactions — Jonathan Roumie Shop</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-page">
+  <main class="admin-shell">
+    <header class="admin-header"><a href="index.html" class="admin-brand">JONATHAN <span>ROUMIE</span><small>PRIVATE ADMIN</small></a><button id="signout" class="signout" type="button" hidden>Sign out</button></header>
+    <section id="login-panel" class="login-panel" aria-labelledby="login-title">
+      <p class="admin-eyebrow">AUTHORIZED ACCESS</p><h1 id="login-title">Transaction<br><em>dashboard.</em></h1>
+      <p>Sign in to review shop orders, donations, and ticket transactions.</p>
+      <form id="login-form"><label for="admin-password">ADMIN PASSWORD</label><input id="admin-password" type="password" name="password" autocomplete="current-password" required><button type="submit">Sign in <span aria-hidden="true">↗</span></button><p id="login-message" class="admin-message" role="status"></p></form>
+    </section>
+    <section id="dashboard" class="dashboard" hidden>
+      <div class="dashboard-heading"><div><p class="admin-eyebrow">PRIVATE ADMIN</p><h1>Transactions.</h1><p class="dashboard-note">Payment status is confirmed by the payment provider. This page is read-only.</p></div><button id="refresh" class="secondary-button" type="button">Refresh</button></div>
+      <div class="admin-controls"><label>STATUS<select id="status-filter"><option value="all">All statuses</option><option value="paid">Paid</option><option value="pending_payment">Pending payment</option><option value="payment_setup_failed">Setup failed</option></select></label><label>TYPE<select id="type-filter"><option value="all">Shop + tickets</option><option value="shop">Shop</option><option value="ticket">Tickets</option></select></label><label class="search-label">SEARCH<input id="search" type="search" placeholder="Name, email, reference, item"></label></div>
+      <p id="result-count" class="result-count" aria-live="polite"></p><div id="admin-message" class="admin-message" role="status"></div>
+      <div class="table-wrap"><table><thead><tr><th>DATE</th><th>STATUS</th><th>TYPE / ITEMS</th><th>ORDERED BY</th><th>AMOUNT</th><th>REFERENCE</th></tr></thead><tbody id="transactions-body"></tbody></table></div>
+    </section>
+    <footer>Transaction access is restricted to authorized administrators.</footer>
+  </main>
+  <script src="admin.js"></script>
+</body>
+</html>

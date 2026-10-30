@@ -20,7 +20,9 @@ const handlers = {
   '/api/flutterwave-webhook': require('./api/flutterwave-webhook'),
   '/api/inquiry': require('./api/inquiry'),
   '/api/payment-return': require('./api/payment-return'),
-  '/api/recommendation': require('./api/recommendation')
+  '/api/recommendation': require('./api/recommendation'),
+  '/api/admin-login': require('./api/admin-login'),
+  '/api/admin-orders': require('./api/admin-orders')
 };
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.avif': 'image/avif' };
 
@@ -39,10 +41,12 @@ async function dispatchApi(request, response, handler) {
     return response.end(JSON.stringify({ error: 'Invalid JSON request.' }));
   }
   let statusCode = 200;
+  const responseHeaders = {};
   const responseAdapter = {
     status(code) { statusCode = code; return this; },
+    setHeader(name, value) { responseHeaders[name] = value; return this; },
     json(body) {
-      response.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      response.writeHead(statusCode, { ...responseHeaders, 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
       response.end(JSON.stringify(body));
       return this;
     },
@@ -53,7 +57,7 @@ async function dispatchApi(request, response, handler) {
 
 const server = http.createServer(async (request, response) => {
   const url = new URL(request.url, SITE_URL);
-  if (handlers[url.pathname] && request.method === 'POST') return dispatchApi(request, response, handlers[url.pathname]);
+  if (handlers[url.pathname] && (request.method === 'POST' || (url.pathname === '/api/admin-orders' && request.method === 'GET'))) return dispatchApi(request, response, handlers[url.pathname]);
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     response.writeHead(405); return response.end('Method not allowed');
   }

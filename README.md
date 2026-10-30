@@ -9,6 +9,7 @@ A responsive shop with product checkout, booking inquiries and Vercel/Supabase i
 - Shipping details collected before payment. Shipping is free.
 - Flutterwave Standard checkout created server-side with the exact server-calculated USD total.
 - Supabase storage for orders and booking inquiries. Direct browser access is blocked by Row Level Security.
+- A password-protected, read-only admin dashboard for shop orders, donations and ticket transactions at `/admin.html`.
 - A Flutterwave webhook that verifies completed payments before changing an order to `paid`.
 - Resend sends the customer a payment-confirmed receipt and sends the shop owner an order and shipping notification.
 - Meet-and-greet and Zoom availability forms. Inquiries are saved in the `booking_inquiries` table and can trigger an email notification.

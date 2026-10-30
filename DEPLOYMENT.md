@@ -42,8 +42,12 @@ The `booking_inquiries`, `event_ticket_orders`, and `customer_recommendations` t
    | `RESEND_FROM_EMAIL` | A sender address on a domain verified in Resend |
    | `SHOP_CURRENCY` | `USD` |
    | `SHIPPING_FEE` | `0` |
+   | `ADMIN_PASSWORD` | A unique, long password used only for the private admin page |
+   | `ADMIN_SESSION_SECRET` | A private random secret of at least 32 characters for signing admin sessions |
 
 4. Deploy the project. Vercel automatically publishes files in `/api` as Node.js Functions.
+
+The private transaction dashboard is available at `/admin.html`. Configure both admin variables before using it. The password is checked by the server, and the session is held in an HTTP-only, same-site cookie that expires after eight hours. Keep both values out of GitHub and browser code. The dashboard lists up to all recorded shop and ticket orders, including donor/order contact details, payment status, amount, provider reference and line items. It is intentionally read-only: payment status is set only after the payment webhook verifies a transaction. Use the payment provider dashboard for refunds or other payment actions.
 
 ### Email alerts for availability requests
 

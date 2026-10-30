@@ -3,10 +3,8 @@ const CHECKOUT_ENDPOINT = "/api/checkout";
 const SHOP_CURRENCY = "USD";
 const SHIPPING_FEE = 0; // Shipping is free.
 const CART_STORAGE_KEY = 'roumie-shop-cart';
-const COUPON_STORAGE_KEY = 'roumie-shop-coupon';
 const COUPON_RATES = { CHOSEN30: 0.30, JR40: 0.40 };
 let appliedCoupon = '';
-try { appliedCoupon = Object.hasOwn(COUPON_RATES, localStorage.getItem(COUPON_STORAGE_KEY)) ? localStorage.getItem(COUPON_STORAGE_KEY) : ''; } catch { /* Coupon remains usable in memory. */ }
 let savedCart = [];
 try {
   const parsedCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
@@ -156,14 +154,12 @@ document.getElementById('coupon-form').addEventListener('submit', event => {
   if (!entered) {
     const wasApplied = Boolean(appliedCoupon);
     appliedCoupon = '';
-    try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch { /* Keep the in-memory state. */ }
     renderCart();
     document.getElementById('coupon-status').textContent = wasApplied ? 'Coupon removed.' : 'Enter a coupon code to apply a discount.';
     return;
   }
   if (!Object.hasOwn(COUPON_RATES, entered)) {
     appliedCoupon = '';
-    try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch { /* Keep the in-memory state. */ }
     status.textContent = 'That code wasn’t recognized. Check it and try again.';
     renderCart();
     document.getElementById('coupon-code').value = entered;
@@ -171,7 +167,6 @@ document.getElementById('coupon-form').addEventListener('submit', event => {
     return;
   }
   appliedCoupon = entered;
-  try { localStorage.setItem(COUPON_STORAGE_KEY, appliedCoupon); } catch { /* Coupon remains applied for this visit. */ }
   renderCart();
 });
 document.getElementById('cart-trigger').addEventListener('click', () => cartDialog.showModal());
